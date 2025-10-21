@@ -1,30 +1,26 @@
-import React from "react";
-
 interface ButtonProps {
   children: React.ReactNode;
   onClick?: () => void;
   variant?: "primary" | "secondary";
-  className?: string;
+  className?: string; // ✅ Add this line
 }
 
 export const Button: React.FC<ButtonProps> = ({
   children,
   onClick,
   variant = "primary",
-  className = "",
+  className = "", // ✅ Default to empty string
 }) => {
-  const baseStyles =
-    "px-6 py-3 rounded-lg font-medium transition-colors duration-200";
-
+  const baseStyles = "";
   const variants = {
     primary: "bg-black text-white hover:bg-gray-800",
-    secondary: "bg-gray-200 text-black hover:bg-gray-300",
+    secondary: "border border-gray-300 text-gray-700 hover:bg-gray-50",
   };
 
   return (
     <button
-      className={`${baseStyles} ${variants[variant]} ${className}`}
       onClick={onClick}
+      className={`${baseStyles} ${variants[variant]} ${className}`}
     >
       {children}
     </button>
