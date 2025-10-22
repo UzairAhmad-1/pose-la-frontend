@@ -51,6 +51,10 @@ export const HeroSection: React.FC = () => {
         <a href="/terms" className="hover:text-black transition-colors">
           Conditions d'utilisation
         </a>
+        <span className="hidden sm:inline">|</span>
+        <a href="/legal-notice" className="hover:text-black transition-colors">
+          Mentions légales
+        </a>
       </div>
     </section>
   );

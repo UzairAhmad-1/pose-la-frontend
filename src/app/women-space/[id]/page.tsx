@@ -1,12 +1,12 @@
 "use client";
 
-import { useState } from "react";
-import { Heart, Lock, Search, Filter, AlertTriangle } from "lucide-react";
-import  Navbar  from "../components/layout/Navbar";
+import { useState, useEffect } from "react";
+import { useRouter, useParams } from "next/navigation";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import Navbar from "../../components/layout/Navbar";
+import { ArrowLeft, MessageCircle } from "lucide-react";
 
-// All 29 cards data with images
+// Import or define allCards here (same as in women-space page)
 const allCards = [
   {
     id: 1,
@@ -445,406 +445,209 @@ const allCards = [
   },
 ];
 
-// Extract unique groups - matching exactly from your image
-const groups = [
-  "Toutes les cartes",
-  "Dignité",
-  "Pardon de soi",
-  "Blessures invisibles",
-  "L'entre-deux émotionnel",
+// Available images array for cycling
+const imageUrls = [
+  "https://images.unsplash.com/photo-1573165662973-4ab3cf3d3508?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=2069",
+  "https://plus.unsplash.com/premium_photo-1675733428753-1b902a7e34bf?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=2070",
+  "https://images.unsplash.com/photo-1554902748-feaf536fc594?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=2070",
+  "https://images.unsplash.com/photo-1505483531331-fc3cf89fd382?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=2076",
+  "https://plus.unsplash.com/premium_photo-1661423910129-9c00490bd914?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1170",
+  "https://images.unsplash.com/photo-1536010447069-d2c8af80c584?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1170",
 ];
 
-export default function WomenSpacePage() {
-  const [selectedGroup, setSelectedGroup] = useState("Toutes les cartes");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [showSensitiveWarning, setShowSensitiveWarning] = useState(false);
-  const [selectedCard, setSelectedCard] = useState<any>(null);
-  const [sensitiveMode, setSensitiveMode] = useState(false);
+export default function CardDetailPage() {
   const router = useRouter();
-  // Filter cards based on selected group and search query
-  const filteredCards = allCards.filter((card) => {
-    const matchesGroup =
-      selectedGroup === "Toutes les cartes" || card.group === selectedGroup;
-    const matchesSearch =
-      card.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      card.subtitle.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesSensitiveMode = sensitiveMode || !card.sensitive;
+  const params = useParams();
+  const cardId = parseInt(params.id as string);
 
-    return matchesGroup && matchesSearch && matchesSensitiveMode;
-  });
+  const [message, setMessage] = useState("");
+  const card = allCards.find((c) => c.id === cardId);
 
-  // Add this debug log to see which cards are being filtered
+  if (!card) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white">
+        <Navbar />
+        <div className="max-w-4xl mx-auto px-4 py-12 text-center">
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">
+            Carte non trouvée
+          </h1>
+          <button
+            onClick={() => router.push("/women-space")}
+            className="text-pink-600 hover:text-pink-700 font-semibold"
+          >
+            ← Retour à l'espace Femme
+          </button>
+        </div>
+      </div>
+    );
+  }
 
-  // Also add a debug log in handleCardClick
-  const handleCardClick = (card: any) => {
-    if (card.locked) {
-      return;
+  const handleSendMessage = () => {
+    if (message.trim()) {
+      console.log("Message envoyé:", message);
+      // Handle message sending logic here
+      setMessage("");
     }
-
-    if (card.sensitive) {
-      console.log("Showing sensitive warning for card:", card.id);
-      setSelectedCard(card);
-      setShowSensitiveWarning(true);
-    } else {
-      router.push(`/women-space/${card.id}`);
-    }
-  };
-
-  const handleAccessSensitive = () => {
-    setSensitiveMode(true);
-    setShowSensitiveWarning(false);
-    if (selectedCard) {
-      router.push(`/women-space/${selectedCard.id}`);
-    }
-    setSelectedCard(null); // Clear the selected card after navigation
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white text-gray-900 font-sans">
+    <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white">
       <Navbar />
 
-      {/* Sensitive Content Warning Modal */}
-      {showSensitiveWarning && (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl p-6 max-w-sm w-full text-center shadow-xl">
-            <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <AlertTriangle className="w-6 h-6 text-orange-500" />
+      <div className="max-w-4xl mx-auto px-4 py-8">
+        {/* Back Button */}
+        <button
+          onClick={() => router.push("/women-space")}
+          className="flex items-center gap-2 text-gray-600 hover:text-pink-600 transition-colors mb-6 font-medium"
+        >
+          <ArrowLeft className="w-5 h-5" />
+          Retour à l'espace Femme
+        </button>
+
+        {/* Badges */}
+        <div className="flex gap-2 mb-4">
+          {card.sensitive && (
+            <span className="bg-orange-100 text-orange-700 text-xs px-3 py-1 rounded-full font-semibold">
+              ⚠ Mode sensible
+            </span>
+          )}
+          {card.isGhost && (
+            <span className="bg-purple-100 text-purple-700 text-xs px-3 py-1 rounded-full font-semibold">
+              Carte fantôme
+            </span>
+          )}
+        </div>
+
+        {/* Hero Image */}
+        <div className="relative w-full h-80 rounded-3xl overflow-hidden mb-8 shadow-lg">
+          <Image
+            src={card.image}
+            alt={card.title}
+            fill
+            className="object-cover"
+            priority
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+        </div>
+
+        {/* Card Header */}
+        <div className="mb-8">
+          <div className="mb-3">
+            <span className="text-sm font-semibold text-pink-600 bg-pink-50 px-4 py-1.5 rounded-full">
+              {card.group}
+            </span>
+          </div>
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            {card.title}
+          </h1>
+          <p className="text-lg text-gray-600 mb-6">{card.subtitle}</p>
+        </div>
+
+        {/* Main Content Section */}
+        <div className="bg-white rounded-3xl p-8 shadow-sm border border-pink-100 mb-6">
+          <h2 className="text-xl font-bold text-gray-900 mb-4">
+            Résonance émotionnelle
+          </h2>
+          <p className="text-gray-700 leading-relaxed whitespace-pre-line">
+            {card.pitch}
+          </p>
+        </div>
+
+        {/* Examples Section */}
+        <div className="bg-white rounded-3xl p-8 shadow-sm border border-pink-100 mb-6">
+          <h2 className="text-xl font-bold text-gray-900 mb-6">
+            Exemples de situations
+          </h2>
+          <div className="space-y-3">
+            <div className="bg-pink-50 rounded-xl p-4 text-gray-700">
+              Tu parles seule dans ta tête comme si tu t'adressais encore à lui
             </div>
-
-            <h3 className="text-lg font-bold mb-3 text-gray-900">
-              Contenu sensible
-            </h3>
-
-            <p className="text-sm text-gray-600 mb-6 leading-relaxed">
-              Cette carte touche à des souvenirs sensibles ou intimes. Veux-tu y
-              accéder maintenant ?
-            </p>
-
-            <div className="flex gap-3">
-              <button
-                onClick={handleAccessSensitive}
-                className="flex-1 bg-orange-500 text-white py-2.5 px-4 rounded-lg hover:bg-orange-600 transition-colors font-medium text-sm"
-              >
-                Accéder
-              </button>
-              <button
-                onClick={() => setShowSensitiveWarning(false)}
-                className="flex-1 bg-gray-100 text-gray-700 py-2.5 px-4 rounded-lg hover:bg-gray-200 transition-colors font-medium text-sm"
-              >
-                Pas maintenant
-              </button>
+            <div className="bg-pink-50 rounded-xl p-4 text-gray-700">
+              Tu écris des messages sans les envoyer
+            </div>
+            <div className="bg-pink-50 rounded-xl p-4 text-gray-700">
+              Tu ressens une colère ou une tendresse que tu n'arrives pas à
+              exprimer
+            </div>
+            <div className="bg-pink-50 rounded-xl p-4 text-gray-700">
+              Tu ne veux pas rouvrir la porte... mais tu veux vider ton cœur
             </div>
           </div>
         </div>
-      )}
 
-      {/* Hero Section */}
-      <div className="bg-gradient-to-r from-pink-100 via-rose-50 to-pink-100 py-16 px-4">
-        <div className="max-w-6xl mx-auto text-center">
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-pink-500 to-rose-500 rounded-full mb-6 shadow-lg">
-            <Heart className="w-10 h-10 text-white fill-white" />
+        {/* Chat with SOYA Section */}
+        <div className="bg-white rounded-3xl p-8 shadow-sm border border-pink-100">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-12 h-12 bg-gradient-to-br from-pink-500 to-rose-500 rounded-full flex items-center justify-center">
+              <MessageCircle className="w-6 h-6 text-white" />
+            </div>
+            <h2 className="text-xl font-bold text-gray-900">
+              Discuter avec SOYA
+            </h2>
           </div>
-          <h1 className="text-5xl font-bold mb-6 text-gray-900">
-            ESPACE FEMME
-          </h1>
-          <p className="text-xl text-gray-700 mb-6 max-w-3xl mx-auto leading-relaxed">
-            Un accompagnement pensé spécifiquement pour les femmes, explorant
-            les défis, les transitions et les forces uniques de l'expérience
-            féminine. Trouve ici un espace de sororité et de compréhension
-            profonde.
-          </p>
-          <div className="flex items-center justify-center gap-4 text-sm flex-wrap">
-            <span className="bg-white text-pink-600 px-4 py-2 rounded-full font-semibold shadow-sm">
-              {allCards.length} cartes disponibles
-            </span>
-            <span className="text-gray-600">•</span>
-            <span className="text-gray-600">
-              Parcours émotionnel personnalisé
-            </span>
-          </div>
+
+          <textarea
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            placeholder="Écris ton message à SOYA..."
+            className="w-full min-h-[120px] p-4 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent resize-none text-gray-900 placeholder-gray-400 mb-4"
+          />
+
+          <button
+            onClick={handleSendMessage}
+            className="w-full bg-gradient-to-r from-pink-500 to-rose-500 text-white py-4 px-6 rounded-xl hover:from-pink-600 hover:to-rose-600 transition-all font-semibold shadow-md"
+          >
+            Envoyer à SOYA
+          </button>
+
+          {/* Special Actions */}
+          {(card.hasPasserelle || card.hasMirror) && (
+            <div className="mt-6">
+              <h3 className="text-sm font-semibold text-gray-600 mb-3">
+                Actions spéciales
+              </h3>
+              <div className="space-y-2">
+                {card.hasPasserelle && (
+                  <button className="w-full bg-purple-50 text-purple-700 px-6 py-3 rounded-xl hover:bg-purple-100 transition-colors font-semibold border border-purple-200 flex items-center justify-center gap-2">
+                    <svg
+                      className="w-5 h-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M13 7l5 5m0 0l-5 5m5-5H6"
+                      />
+                    </svg>
+                    Carte passerelle
+                  </button>
+                )}
+                {card.hasMirror && (
+                  <button className="w-full bg-blue-50 text-blue-700 px-6 py-3 rounded-xl hover:bg-blue-100 transition-colors font-semibold border border-blue-200 flex items-center justify-center gap-2">
+                    <svg
+                      className="w-5 h-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M4 5a1 1 0 011-1h4a1 1 0 011 1v7a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v7a1 1 0 01-1 1h-4a1 1 0 01-1-1V5z"
+                      />
+                    </svg>
+                    Carte miroir
+                  </button>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </div>
-
-      {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 py-12">
-        {/* Search and Filter Section */}
-        <div className="mb-5">
-          {/* Filter Section */}
-          <div className="space-y-4">
-            <div className="flex items-center gap-3">
-              <Filter className="w-5 h-5 text-gray-500" />
-              <span className="text-sm font-semibold text-gray-600">
-                Filtrer par groupe :
-              </span>
-            </div>
-
-            {/* Filter Pills */}
-            <div className="flex flex-wrap gap-3 mb-4">
-              {groups.map((group) => (
-                <button
-                  key={group}
-                  onClick={() => setSelectedGroup(group)}
-                  className={`px-6 py-2.5 rounded-full text-sm font-semibold transition-all shadow-sm ${
-                    selectedGroup === group
-                      ? "bg-gradient-to-r from-pink-500 to-rose-500 text-white shadow-md"
-                      : "bg-white text-gray-700 hover:bg-pink-50 border border-gray-200"
-                  }`}
-                >
-                  {group}
-                </button>
-              ))}
-            </div>
-
-            {/* Sensitive Mode Toggle */}
-            <div className="flex items-center gap-3 bg-white p-4 rounded-2xl border border-gray-200">
-              {/* Non-clickable label text */}
-              <span
-                id="sensitiveModeLabel"
-                className="text-sm font-semibold text-gray-600"
-              >
-                Mode sensible
-              </span>
-
-              {/* Toggle switch */}
-              <label
-                className="relative inline-flex items-center cursor-pointer"
-                aria-labelledby="sensitiveModeLabel"
-              >
-                <input
-                  type="checkbox"
-                  className="sr-only peer"
-                  checked={sensitiveMode}
-                  onChange={(e) => setSensitiveMode(e.target.checked)}
-                  title="Activer ou désactiver le mode sensible"
-                />
-                <div
-                  className="w-11 h-6 bg-gray-200 rounded-full peer-focus:outline-none peer-checked:bg-pink-500
-      after:content-[''] after:absolute after:top-[2px] after:left-[2px]
-      after:bg-white after:border-gray-300 after:border after:rounded-full
-      after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full peer-checked:after:border-white"
-                ></div>
-              </label>
-
-              <span className="text-xs text-gray-500 ml-2">
-                {sensitiveMode ? "Activé" : "Désactivé"}
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Cards Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredCards.map((card) => (
-            <div
-              key={card.id}
-              className={`bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 ${
-                card.locked ? "opacity-75" : "cursor-pointer"
-              }`}
-              onClick={() => handleCardClick(card)}
-            >
-              {/* Card Image */}
-              <div className="relative h-48 overflow-hidden">
-                <Image
-                  src={card.image}
-                  alt={card.title}
-                  fill
-                  className="object-cover"
-                />
-                {card.locked && (
-                  <div className="absolute inset-0 bg-white bg-opacity-80 backdrop-blur-sm flex items-center justify-center">
-                    <Lock className="w-12 h-12 text-gray-400" />
-                  </div>
-                )}
-
-                {/* Badges */}
-                {/* <div className="absolute top-3 left-3 right-3 flex justify-between">
-                  <div className="flex gap-2">
-                    {card.isGhost && (
-                      <span className="bg-purple-500 text-white text-xs px-3 py-1 rounded-full font-semibold shadow-sm">
-                        Carte fantôme
-                      </span>
-                    )}
-                  </div>
-                  <div>
-                    {card.sensitive && (
-                      <span className="bg-orange-500 text-white text-xs px-3 py-1 rounded-full font-semibold shadow-sm">
-                        Mode sensible
-                      </span>
-                    )}
-                  </div>
-                </div> */}
-              </div>
-
-              {/* Card Content */}
-              <div className="p-6">
-                <div className="mb-3">
-                  <span className="text-xs font-semibold text-pink-600 bg-pink-50 px-3 py-1 rounded-full">
-                    {card.group}
-                  </span>
-                </div>
-                <h3 className="text-lg font-bold mb-2 text-gray-900 line-clamp-2 min-h-[3.5rem]">
-                  {card.title}
-                </h3>
-                <p className="text-sm text-gray-600 mb-4 line-clamp-2">
-                  {card.subtitle}
-                </p>
-
-                {/* Action Buttons */}
-                {card.locked ? (
-                  <div className="text-center py-2">
-                    <p className="text-sm text-gray-500 mb-3">
-                      Cette carte est verrouillée
-                    </p>
-                    <button
-                      className="w-full bg-gray-200 text-gray-700 px-6 py-3 rounded-xl hover:bg-gray-300 transition-colors text-sm font-semibold"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      Déverrouiller
-                    </button>
-                  </div>
-                ) : (
-                  <div className="space-y-3">
-                    <button
-                      className="w-full bg-gradient-to-r from-pink-500 to-rose-500 text-white px-6 py-3 rounded-xl hover:from-pink-600 hover:to-rose-600 transition-all font-semibold shadow-md flex items-center justify-center gap-2"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleCardClick(card);
-                      }}
-                    >
-                      Explorer
-                      <svg
-                        className="w-4 h-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M9 5l7 7-7 7"
-                        />
-                      </svg>
-                    </button>
-
-                    {/* Special Buttons for Ghost Cards */}
-                    {(card.hasPasserelle || card.hasMirror) && (
-                      <div className="flex gap-2">
-                        {card.hasPasserelle && (
-                          <button
-                            className="flex-1 bg-purple-50 text-purple-700 px-4 py-2 rounded-xl hover:bg-purple-100 transition-colors text-sm font-semibold border border-purple-200"
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                            ☞ Passerelle
-                          </button>
-                        )}
-                        {card.hasMirror && (
-                          <button
-                            className="flex-1 bg-blue-50 text-blue-700 px-4 py-2 rounded-xl hover:bg-blue-100 transition-colors text-sm font-semibold border border-blue-200"
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                            ☐ Miroir
-                          </button>
-                        )}
-                      </div>
-                    )}
-
-                    {card.isGhost && (
-                      <p className="text-xs text-center text-gray-500 italic">
-                        Carte fantôme - Contenu en exploration
-                      </p>
-                    )}
-                  </div>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* No Results Message */}
-        {filteredCards.length === 0 && (
-          <div className="text-center py-16">
-            <div className="w-20 h-20 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Search className="w-10 h-10 text-pink-400" />
-            </div>
-            <h3 className="text-xl font-bold text-gray-900 mb-2">
-              Aucune carte trouvée
-            </h3>
-            <p className="text-gray-600">
-              Essaie de modifier tes filtres ou ta recherche
-            </p>
-          </div>
-        )}
-
-        {/* Stats Section */}
-        <div className="mt-16 bg-gradient-to-r from-pink-50 to-rose-50 rounded-2xl p-8 border border-pink-100">
-          <div className="grid md:grid-cols-3 gap-8 text-center">
-            <div>
-              <div className="text-4xl font-bold text-pink-600 mb-2">
-                {allCards.length}
-              </div>
-              <div className="text-sm text-gray-600 font-semibold">
-                Cartes disponibles
-              </div>
-            </div>
-            <div>
-              <div className="text-4xl font-bold text-pink-600 mb-2">
-                {allCards.filter((c) => !c.locked).length}
-              </div>
-              <div className="text-sm text-gray-600 font-semibold">
-                Cartes déverrouillées
-              </div>
-            </div>
-            <div>
-              <div className="text-4xl font-bold text-pink-600 mb-2">
-                {groups.length - 1}
-              </div>
-              <div className="text-sm text-gray-600 font-semibold">
-                Groupes thématiques
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Info Banner */}
-        <div className="mt-12 bg-white rounded-2xl p-8 border border-pink-100 shadow-sm">
-          <div className="flex items-start gap-4">
-            <div className="w-12 h-12 bg-pink-100 rounded-full flex items-center justify-center flex-shrink-0">
-              <Heart className="w-6 h-6 text-pink-600" />
-            </div>
-            <div>
-              <h3 className="text-lg font-bold text-gray-900 mb-2">
-                Un espace pensé pour toi
-              </h3>
-              <p className="text-gray-600 leading-relaxed">
-                Chaque carte a été créée avec soin pour accompagner ton parcours
-                émotionnel. Prends ton temps, explore à ton rythme, et n'hésite
-                pas à revenir sur les cartes qui résonnent particulièrement avec
-                toi. Tu n'es pas seule dans ce voyage.
-              </p>
-            </div>
-          </div>
-        </div>
-      </main>
-
-      {/* Footer Section */}
-      <footer className="bg-gradient-to-r from-pink-100 to-rose-100 mt-20 py-12 px-4">
-        <div className="max-w-6xl mx-auto text-center">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-white rounded-full mb-4 shadow-md">
-            <Heart className="w-8 h-8 text-pink-500 fill-pink-500" />
-          </div>
-          <h3 className="text-2xl font-bold text-gray-900 mb-3">
-            Besoin d'accompagnement ?
-          </h3>
-          <p className="text-gray-700 mb-6 max-w-2xl mx-auto">
-            SOYA est là pour t'écouter, te guider et t'accompagner dans ton
-            parcours. Chaque conversation est un pas vers ta reconstruction.
-          </p>
-          <button className="bg-gradient-to-r from-pink-500 to-rose-500 text-white px-8 py-4 rounded-xl hover:from-pink-600 hover:to-rose-600 transition-all font-semibold shadow-lg">
-            Discuter avec SOYA
-          </button>
-        </div>
-      </footer>
     </div>
   );
 }

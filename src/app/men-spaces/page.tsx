@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Heart, Lock, Search, Filter } from "lucide-react";
-import { Navbar } from "../components/layout/Navbar";
+import Navbar from "../components/layout/Navbar";
 import Image from "next/image";
 
 // All 21 cards data with images

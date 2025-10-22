@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { useToast } from "../hooks/useToast";
+import EmojiPicker from "emoji-picker-react";
 import { ToastContainer } from "../components/ui/ToastContainer";
 import {
   ChevronLeft,
@@ -106,8 +107,10 @@ export default function ChatPage() {
   >("account");
   const { toasts, showToast, removeToast } = useToast();
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const [isRecording, setIsRecording] = useState(false);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   // Sample data
   const thematicGroups = [
     { id: "wounds", name: "Invisible Wounds", count: 12 },
@@ -121,59 +124,32 @@ export default function ChatPage() {
   const sampleCards: Card[] = [
     {
       id: "1",
-      title: "I no longer want to beg to exist",
+      title: "Je ne veux plus mendier pour exister",
       pitch:
-        "You're tired of reaching out to exist in the eyes of others. You forget yourself believing you have to prove your worth to be loved.",
+        "Tu en as assez de devoir chercher à exister aux yeux des autres. Tu t’oublies en croyant devoir prouver ta valeur pour être aimé.",
       type: "mirror",
       sensitiveMode: true,
       group: "wounds",
     },
     {
       id: "2",
-      title: "The weight of silence",
+      title: "Le poids du silence",
       pitch:
-        "When words remain unspoken, they create echoes that shape our relationships and self-perception.",
+        "Quand les mots restent tus, ils créent des échos qui façonnent nos relations et notre perception de nous-mêmes.",
       type: "phantom",
       sensitiveMode: false,
       group: "overload",
     },
     {
       id: "3",
-      title: "Breaking inherited patterns",
+      title: "Briser les schémas hérités",
       pitch:
-        "Understanding how family legacy influences your current relationships and emotional responses.",
+        "Comprendre comment l’héritage familial influence tes relations actuelles et tes réactions émotionnelles.",
       type: "bridge",
       sensitiveMode: true,
       group: "family",
     },
   ];
-
-  const cardTypes = {
-    locked: {
-      icon: Lock,
-      color: "text-amber-600",
-      bgColor: "bg-amber-50",
-      label: "Locked Card",
-    },
-    mirror: {
-      icon: Eye,
-      color: "text-blue-600",
-      bgColor: "bg-blue-50",
-      label: "Mirror Card",
-    },
-    bridge: {
-      icon: GitMerge,
-      color: "text-emerald-600",
-      bgColor: "bg-emerald-50",
-      label: "Bridge Card",
-    },
-    phantom: {
-      icon: Ghost,
-      color: "text-purple-600",
-      bgColor: "bg-purple-50",
-      label: "Phantom Card",
-    },
-  };
 
   // Scroll to bottom of messages
   const scrollToBottom = () => {
@@ -241,9 +217,33 @@ export default function ChatPage() {
   };
 
   // Start new conversation
+  // Start new conversation
   const handleNewConversation = () => {
-    setMessages([]);
-    showToast("New conversation started", "success", 2000);
+    // If we're in chat view with messages, just clear them for a fresh start
+    if (currentView === "chat" && selectedCard) {
+      setMessages([]);
+      showToast("New conversation started", "success", 2000);
+      return;
+    }
+
+    // If we have a selected card but not in chat view, go to chat
+    if (selectedCard) {
+      setCurrentView("chat");
+      setMessages([]);
+      showToast("New conversation started", "success", 2000);
+      return;
+    }
+
+    // If no card is selected, try to use the first sample card as default
+    if (sampleCards.length > 0) {
+      const defaultCard = sampleCards[0];
+      setSelectedCard(defaultCard);
+      setCurrentView("chat");
+      setMessages([]);
+      showToast(`New conversation: ${defaultCard.title}`, "success", 2000);
+    } else {
+      showToast("No cards available", "error", 3000);
+    }
   };
 
   // File attachment handler
@@ -255,8 +255,36 @@ export default function ChatPage() {
     const file = e.target.files?.[0];
     if (file) {
       showToast(`File "${file.name}" attached`, "success", 3000);
+      // You can add additional file handling logic here
+      // For example: upload file, store file reference, etc.
     }
+    // Reset the input to allow selecting the same file again
+    e.target.value = "";
   };
+
+  // Emoji handlers
+  const handleEmojiClick = () => {
+    setShowEmojiPicker(!showEmojiPicker);
+  };
+
+  const handleEmojiSelect = (emojiData: any) => {
+    setInputMessage((prev) => prev + emojiData.emoji);
+    setShowEmojiPicker(false);
+  };
+
+  // Close emoji picker when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (showEmojiPicker) {
+        setShowEmojiPicker(false);
+      }
+    };
+
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, [showEmojiPicker]);
 
   // Render different views based on current state
   const renderCurrentView = () => {
@@ -298,16 +326,17 @@ export default function ChatPage() {
         {/* Header */}
         <div className="p-6 border-b border-gray-200">
           <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-              <MessageCircle className="h-5 w-5 text-white" />
+            <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center">
+              <Pause className="h-5 w-5 text-white" />
             </div>
             <h1 className="text-xl font-bold text-gray-900">POSE-LÀ</h1>
           </div>
         </div>
 
-        {/* New Conversation Button */}
+        {/* New Conversation Button  */}
         <div className="p-4 border-b border-gray-200">
           <button
+            title="button"
             onClick={handleNewConversation}
             className="w-full flex items-center justify-center space-x-2 px-4 py-3 bg-black text-white rounded-lg hover:bg-gray-800 transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98]"
           >
@@ -341,6 +370,7 @@ export default function ChatPage() {
         {/* Profile Section */}
         <div className="p-4 border-t border-gray-200">
           <button
+            title="button"
             onClick={() => setIsProfileOpen(true)}
             className="w-full flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200"
           >
@@ -363,6 +393,7 @@ export default function ChatPage() {
           <div className="flex items-center space-x-4">
             {currentView !== "spaces" && (
               <button
+                title="button"
                 onClick={() => {
                   if (currentView === "chat") setCurrentView("cards");
                   else if (currentView === "cards") setCurrentView("groups");
@@ -382,11 +413,17 @@ export default function ChatPage() {
           </div>
 
           <div className="flex items-center space-x-2">
-            <button className="p-2 hover:bg-white/50 rounded-lg transition-colors duration-200">
+            <button
+              title="button"
+              className="p-2 hover:bg-white/50 rounded-lg transition-colors duration-200"
+            >
               <Search className="h-5 w-5 text-gray-700" />
             </button>
             <div className="relative">
-              <button className="p-2 hover:bg-white/50 rounded-lg transition-colors duration-200">
+              <button
+                title="button"
+                className="p-2 hover:bg-white/50 rounded-lg transition-colors duration-200"
+              >
                 <MoreVertical className="h-5 w-5 text-gray-700" />
               </button>
             </div>
@@ -408,52 +445,66 @@ export default function ChatPage() {
 
         {/* Input Area - Only show in chat view */}
         {currentView === "chat" && (
-          <div className="border-t border-gray-200 p-6 bg-white">
-            <div className="max-w-4xl mx-auto">
-              <div className="flex items-end space-x-4">
-                <div className="flex-1 bg-[#d9d9d9] rounded-2xl px-4 py-3 focus-within:ring-2 focus-within:ring-black focus-within:border-transparent transition-all duration-200">
+          <div className="border-t border-gray-200 p-3 bg-white">
+            <div className="max-w-5xl mx-auto">
+              <div className="flex items-center space-x-3">
+                {/* File Upload Button */}
+                <button
+                  title="Attach file"
+                  onClick={handleFileAttach}
+                  className="p-3 bg-gray-100 hover:bg-gray-200 rounded-2xl transition-colors duration-200"
+                >
+                  <Paperclip className="h-5 w-5 text-gray-600" />
+                </button>
+
+                {/* Chat Input Field */}
+                <div className="flex-1 relative">
                   <textarea
                     value={inputMessage}
                     onChange={(e) => setInputMessage(e.target.value)}
                     onKeyDown={handleKeyPress}
                     placeholder="Write as if it were 2 a.m."
-                    className="w-full bg-transparent border-0 focus:outline-none focus:ring-0 resize-none text-gray-900 placeholder-[#737373] text-sm"
-                    rows={2}
+                    rows={1}
+                    className="w-full bg-[#d9d9d9] rounded-2xl pl-4 pr-24 py-4 text-sm text-gray-900 placeholder-[#737373] border-0 focus:outline-none resize-none leading-relaxed"
+                    style={{ minHeight: "48px" }}
                   />
-                  <div className="flex items-center justify-between mt-2">
-                    <div className="flex items-center space-x-1">
-                      <button
-                        onClick={handleFileAttach}
-                        className="p-2 hover:bg-black/10 rounded-lg transition-colors duration-200"
-                      >
-                        <Paperclip className="h-4 w-4 text-gray-600" />
-                      </button>
-                      <button className="p-2 hover:bg-black/10 rounded-lg transition-colors duration-200">
-                        <Mic className="h-4 w-4 text-gray-600" />
-                      </button>
-                      <button className="p-2 hover:bg-black/10 rounded-lg transition-colors duration-200">
-                        <Smile className="h-4 w-4 text-gray-600" />
-                      </button>
-                    </div>
-                    <div className="text-xs text-gray-500">
-                      Ctrl + Enter to send
-                    </div>
+                  {/* Mic + Send icons inside textarea */}
+                  <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center space-x-2">
+                    <button
+                      title="Send"
+                      onClick={handleSendMessage}
+                      disabled={!inputMessage.trim()}
+                      className="p-2 bg-black text-white rounded-xl hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-transform duration-200 transform hover:scale-105 active:scale-95"
+                    >
+                      <Send className="h-4 w-4" />
+                    </button>
                   </div>
                 </div>
 
+                {/* Emoji Button */}
                 <button
-                  onClick={handleSendMessage}
-                  disabled={!inputMessage.trim()}
-                  className="p-4 bg-black text-white rounded-2xl hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-105 active:scale-95"
+                  title="Emoji"
+                  onClick={handleEmojiClick}
+                  className="p-3 bg-gray-100 hover:bg-gray-200 rounded-2xl transition-colors duration-200 relative"
                 >
-                  <Send className="h-5 w-5" />
+                  <Smile className="h-5 w-5 text-gray-600" />
+                  {/* Emoji Picker */}
+                  {showEmojiPicker && (
+                    <div className="absolute bottom-full right-0 mb-2 z-10">
+                      <EmojiPicker
+                        onEmojiClick={handleEmojiSelect}
+                        width={300}
+                        height={400}
+                      />
+                    </div>
+                  )}
                 </button>
               </div>
             </div>
           </div>
         )}
 
-        {/* Hidden file input */}
+        {/* Hidden File Input */}
         <input
           type="file"
           ref={fileInputRef}
@@ -507,6 +558,7 @@ function SpacesView({
                 Explore emotions and relationships from a feminine perspective
               </p>
               <button
+                title="button"
                 onClick={() => onSpaceSelect("women")}
                 className="w-full bg-rose-600 text-white py-3 px-6 rounded-lg hover:bg-rose-700 transition-colors duration-200 font-medium"
               >
@@ -528,6 +580,7 @@ function SpacesView({
                 Navigate emotional landscapes from a masculine perspective
               </p>
               <button
+                title="button"
                 onClick={() => onSpaceSelect("men")}
                 className="w-full bg-indigo-600 text-white py-3 px-6 rounded-lg hover:bg-indigo-700 transition-colors duration-200 font-medium"
               >
@@ -549,6 +602,7 @@ function SpacesView({
                 Mixed perspectives for all genders and identities
               </p>
               <button
+                title="button"
                 onClick={() => onSpaceSelect("universal")}
                 className="w-full bg-teal-600 text-white py-3 px-6 rounded-lg hover:bg-teal-700 transition-colors duration-200 font-medium"
               >
@@ -569,7 +623,10 @@ function SpacesView({
               <p className="text-gray-600 mb-4">
                 Healing and reconstruction journey
               </p>
-              <button className="w-full bg-orange-600 text-white py-3 px-6 rounded-lg hover:bg-orange-700 transition-colors duration-200 font-medium">
+              <button
+                title="button"
+                className="w-full bg-orange-600 text-white py-3 px-6 rounded-lg hover:bg-orange-700 transition-colors duration-200 font-medium"
+              >
                 Start Journey
               </button>
             </div>
@@ -592,7 +649,10 @@ function SpacesView({
               When she says this, what does he hear? / When he says this, what
               does she hear?
             </p>
-            <button className="w-full bg-gray-800 text-white py-2 px-4 rounded-lg hover:bg-gray-900 transition-colors duration-200 text-sm font-medium">
+            <button
+              title="button"
+              className="w-full bg-gray-800 text-white py-2 px-4 rounded-lg hover:bg-gray-900 transition-colors duration-200 text-sm font-medium"
+            >
               Discover Translations
             </button>
           </div>
@@ -610,7 +670,10 @@ function SpacesView({
             <p className="text-gray-600 mb-4 text-sm">
               Analyze and understand your relationship patterns and dynamics
             </p>
-            <button className="w-full bg-gray-800 text-white py-2 px-4 rounded-lg hover:bg-gray-900 transition-colors duration-200 text-sm font-medium">
+            <button
+              title="button"
+              className="w-full bg-gray-800 text-white py-2 px-4 rounded-lg hover:bg-gray-900 transition-colors duration-200 text-sm font-medium"
+            >
               Scan Relationships
             </button>
           </div>
@@ -628,7 +691,10 @@ function SpacesView({
             <p className="text-gray-600 mb-4 text-sm">
               Activate your natural charisma and magnetic presence
             </p>
-            <button className="w-full bg-gray-800 text-white py-2 px-4 rounded-lg hover:bg-gray-900 transition-colors duration-200 text-sm font-medium">
+            <button
+              title="button"
+              className="w-full bg-gray-800 text-white py-2 px-4 rounded-lg hover:bg-gray-900 transition-colors duration-200 text-sm font-medium"
+            >
               Activate Energy
             </button>
           </div>
@@ -637,6 +703,7 @@ function SpacesView({
         {/* Back to Top Footer */}
         <div className="text-center mt-12 pt-8 border-t border-gray-200">
           <button
+            title="button"
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
             className="inline-flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors duration-200"
           >
@@ -672,10 +739,16 @@ function GroupsView({
             </p>
           </div>
           <div className="flex items-center space-x-3">
-            <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors duration-200">
+            <button
+              title="button"
+              className="p-2 hover:bg-gray-100 rounded-lg transition-colors duration-200"
+            >
               <Grid className="h-5 w-5 text-gray-600" />
             </button>
-            <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors duration-200">
+            <button
+              title="button"
+              className="p-2 hover:bg-gray-100 rounded-lg transition-colors duration-200"
+            >
               <List className="h-5 w-5 text-gray-600" />
             </button>
           </div>
@@ -711,7 +784,32 @@ function GroupsView({
     </div>
   );
 }
-
+const cardTypes = {
+  locked: {
+    icon: Lock,
+    color: "text-amber-600",
+    bgColor: "bg-amber-50",
+    label: "Locked Card",
+  },
+  mirror: {
+    icon: Eye,
+    color: "text-blue-600",
+    bgColor: "bg-blue-50",
+    label: "Mirror Card",
+  },
+  bridge: {
+    icon: GitMerge,
+    color: "text-emerald-600",
+    bgColor: "bg-emerald-50",
+    label: "Bridge Card",
+  },
+  phantom: {
+    icon: Ghost,
+    color: "text-purple-600",
+    bgColor: "bg-purple-50",
+    label: "Phantom Card",
+  },
+};
 // Component for Cards View
 function CardsView({
   cards,
@@ -733,7 +831,10 @@ function CardsView({
             </p>
           </div>
           <div className="flex items-center space-x-3">
-            <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors duration-200">
+            <button
+              title="button"
+              className="p-2 hover:bg-gray-100 rounded-lg transition-colors duration-200"
+            >
               <Filter className="h-5 w-5 text-gray-600" />
             </button>
           </div>
@@ -785,7 +886,7 @@ function CardsView({
 // Component for Chat View
 function ChatView({ card, messages }: { card: Card; messages: Message[] }) {
   const CardIcon = cardTypes[card.type].icon;
-
+  const messagesEndRef = useRef<HTMLDivElement>(null);
   return (
     <div className="flex-1 flex flex-col h-full">
       {/* Card Header */}
@@ -870,13 +971,20 @@ function ChatView({ card, messages }: { card: Card; messages: Message[] }) {
                       </p>
                     </div>
                     <div className="flex items-center space-x-4 mt-3">
-                      <button className="p-1 hover:bg-gray-100 rounded transition-colors duration-200">
+                      <button
+                        title="button"
+                        className="p-1 hover:bg-gray-100 rounded transition-colors duration-200"
+                      >
                         <ThumbsUp className="h-4 w-4 text-gray-500" />
                       </button>
-                      <button className="p-1 hover:bg-gray-100 rounded transition-colors duration-200">
+                      <button
+                        title="button"
+                        className="p-1 hover:bg-gray-100 rounded transition-colors duration-200"
+                      >
                         <ThumbsDown className="h-4 w-4 text-gray-500" />
                       </button>
                       <button
+                        title="button"
                         className="p-1 hover:bg-gray-100 rounded transition-colors duration-200"
                         onClick={() =>
                           navigator.clipboard.writeText(message.text)
@@ -937,12 +1045,14 @@ function SensitiveWarningView({
 
         <div className="flex space-x-4">
           <button
+            title="button"
             onClick={onCancel}
             className="flex-1 py-3 px-6 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors duration-200 font-medium"
           >
             Not Now
           </button>
           <button
+            title="button"
             onClick={onAccess}
             className="flex-1 py-3 px-6 bg-rose-600 text-white rounded-lg hover:bg-rose-700 transition-colors duration-200 font-medium"
           >
@@ -994,6 +1104,7 @@ function ProfileSettingsModal({
                 const Icon = item.icon;
                 return (
                   <button
+                    title="button"
                     key={item.id}
                     onClick={() => onTabChange(item.id)}
                     className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors duration-200 ${
@@ -1010,7 +1121,10 @@ function ProfileSettingsModal({
             </nav>
 
             <div className="mt-8 pt-6 border-t border-gray-200">
-              <button className="w-full flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors duration-200">
+              <button
+                title="button"
+                className="w-full flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors duration-200"
+              >
                 <LogOut className="h-5 w-5" />
                 <span className="font-medium">Log Out</span>
               </button>
@@ -1027,6 +1141,7 @@ function ProfileSettingsModal({
                 {activeTab === "support" && "Help & Support"}
               </h2>
               <button
+                title="button"
                 onClick={onClose}
                 className="p-2 hover:bg-gray-100 rounded-lg transition-colors duration-200"
               >
@@ -1062,7 +1177,10 @@ function AccountSettings() {
               <p className="font-medium text-gray-900">Free Trial</p>
               <p className="text-sm text-gray-500">3 days remaining</p>
             </div>
-            <button className="bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors duration-200">
+            <button
+              title="button"
+              className="bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors duration-200"
+            >
               Upgrade Plan
             </button>
           </div>
@@ -1074,7 +1192,10 @@ function AccountSettings() {
         <p className="text-gray-600 mb-4">
           Download your conversation history and personal data
         </p>
-        <button className="flex items-center space-x-2 text-blue-600 hover:text-blue-700 transition-colors duration-200">
+        <button
+          title="button"
+          className="flex items-center space-x-2 text-blue-600 hover:text-blue-700 transition-colors duration-200"
+        >
           <Download className="h-4 w-4" />
           <span>Export as JSON/PDF</span>
         </button>
@@ -1085,7 +1206,10 @@ function AccountSettings() {
         <p className="text-gray-600 mb-4">
           Permanently delete your account and all data
         </p>
-        <button className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors duration-200">
+        <button
+          title="button"
+          className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors duration-200"
+        >
           Delete Account
         </button>
       </div>
@@ -1112,6 +1236,7 @@ function PrivacySettings() {
             </p>
           </div>
           <button
+            title="button"
             onClick={() => setMemoryEnabled(!memoryEnabled)}
             className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 ${
               memoryEnabled ? "bg-blue-600" : "bg-gray-200"
@@ -1187,11 +1312,17 @@ function AppSettings() {
               Theme
             </label>
             <div className="flex space-x-2">
-              <button className="flex-1 flex items-center justify-center space-x-2 p-3 border border-gray-300 rounded-lg">
+              <button
+                title="button"
+                className="flex-1 flex items-center justify-center space-x-2 p-3 border border-gray-300 rounded-lg"
+              >
                 <Sun className="h-4 w-4" />
                 <span>Light</span>
               </button>
-              <button className="flex-1 flex items-center justify-center space-x-2 p-3 border border-gray-300 rounded-lg bg-gray-800 text-white">
+              <button
+                title="button"
+                className="flex-1 flex items-center justify-center space-x-2 p-3 border border-gray-300 rounded-lg bg-gray-800 text-white"
+              >
                 <Moon className="h-4 w-4" />
                 <span>Dark</span>
               </button>
@@ -1239,7 +1370,10 @@ function SupportSettings() {
       <div className="bg-white border border-gray-200 rounded-xl p-6">
         <h3 className="text-lg font-bold text-gray-900 mb-4">Help Center</h3>
         <div className="space-y-3">
-          <button className="w-full text-left p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors duration-200">
+          <button
+            title="button"
+            className="w-full text-left p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors duration-200"
+          >
             <p className="font-medium text-gray-900">
               How to Start a Conversation
             </p>
@@ -1247,7 +1381,10 @@ function SupportSettings() {
               Step-by-step guide to begin chatting with SOYA
             </p>
           </button>
-          <button className="w-full text-left p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors duration-200">
+          <button
+            title="button"
+            className="w-full text-left p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors duration-200"
+          >
             <p className="font-medium text-gray-900">
               Understanding Card Types
             </p>
@@ -1255,7 +1392,10 @@ function SupportSettings() {
               Learn about Mirror, Bridge, Locked, and Phantom cards
             </p>
           </button>
-          <button className="w-full text-left p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors duration-200">
+          <button
+            title="button"
+            className="w-full text-left p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors duration-200"
+          >
             <p className="font-medium text-gray-900">Managing Subscription</p>
             <p className="text-sm text-gray-600">
               Upgrade, downgrade, or cancel your plan
@@ -1272,7 +1412,10 @@ function SupportSettings() {
           Your message will be read with care. We'll get back to you as soon as
           possible, with kindness.
         </p>
-        <button className="bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition-colors duration-200">
+        <button
+          title="button"
+          className="bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition-colors duration-200"
+        >
           Contact the Team
         </button>
       </div>
