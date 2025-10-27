@@ -2,8 +2,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import Navbar from "../components/layout/Navbar";
-import { useState } from "react";
-
+import { useState, useEffect } from "react";
+import { useAuth } from "../contexts/AuthContext";
 // This would typically come from your user context/auth
 type Gender = "female" | "male" | "other" | "not-specified" | null;
 
@@ -139,10 +139,33 @@ function GenderPreferenceModal({
 }
 
 export default function HomePage() {
-  // Replace this with actual user gender from your auth/context
-  const [userGender, setUserGender] = useState<Gender>("female"); // Example: "female", "male", "other", "not-specified", null
   const [showGenderModal, setShowGenderModal] = useState(false);
   const [selectedJourney, setSelectedJourney] = useState<string | null>(null);
+  const { user, isLoading } = useAuth();
+  const userGender = user?.gender
+    ? (user.gender.toLowerCase() as "female" | "male" | "other" | "universal")
+    : null;
+
+  useEffect(() => {
+    if (!isLoading && !user) {
+      window.location.href = "/";
+    }
+  }, [user, isLoading]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-[#f8f9fa] flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-black mx-auto"></div>
+          <p className="mt-4 text-gray-600">Chargement...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return null;
+  }
 
   const handleGenderPreferenceSelect = (
     choice: "women" | "men" | "universal"
@@ -188,9 +211,9 @@ export default function HomePage() {
       };
     }
 
-    // Not specified - highlight universal
+    // Not specified or universal - highlight universal
     if (
-      (userGender === "not-specified" || userGender === null) &&
+      (userGender === "universal" || userGender === null) &&
       space === "universal"
     ) {
       return {
@@ -285,7 +308,7 @@ export default function HomePage() {
               </p>
               <div className="mt-auto">
                 <Link
-                  href="/je-me-reconstruis"
+                  href="/rebuilding-myself"
                   className="text-black font-semibold hover:underline text-lg"
                 >
                   Explorer →
@@ -327,7 +350,7 @@ export default function HomePage() {
             </div>
 
             {/* Énergie de séduction */}
-            <div className="border border-gray-200 rounded-lg p-6 bg-white flex-flex-col h-full">
+            <div className="border border-gray-200 rounded-lg p-6 bg-white flex flex-col h-full">
               <h3 className="text-xl font-bold mb-3">Énergie de séduction</h3>
               <p className="text-gray-700 mb-4 flex-grow">
                 Réveille son charisme authentique.

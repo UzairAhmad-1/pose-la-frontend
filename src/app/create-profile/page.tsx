@@ -1,14 +1,16 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { Toast, ToastType } from "../components/ui/Toast";
+import { userApi } from "../lib/api/user.api";
 
 export default function CreateProfilePage() {
   const [formData, setFormData] = useState({
     name: "",
     birthDate: "",
     gender: "",
+    customGender: "", // Add customGender to formData
   });
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -60,7 +62,7 @@ export default function CreateProfilePage() {
     return age;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     // Validate required fields
@@ -99,12 +101,56 @@ export default function CreateProfilePage() {
 
     setIsLoading(true);
 
-    // Simulate API call
-    setTimeout(() => {
-      showToast("Espace émotionnel créé avec succès !", "success");
-      // Redirect to main app
-      window.location.href = "/home";
-    }, 2000);
+    try {
+      const authToken = localStorage.getItem("authToken");
+      if (!authToken) {
+        throw new Error("Session expirée, veuillez vous reconnecter");
+      }
+
+      // Prepare onboarding data - fix the field names to match backend
+      const onboardingData = {
+        name: formData.name.trim(),
+        dateOfBirth: formData.birthDate, // Make sure this matches backend expectation
+        gender: formData.gender,
+        ...(formData.gender === "autre" &&
+          formData.customGender && {
+            customGender: formData.customGender,
+          }),
+      };
+
+      console.log("Sending onboarding data:", onboardingData); // Debug log
+
+      const response = await userApi.completeOnboarding(
+        onboardingData,
+        authToken
+      );
+
+      // Fix: Check if response.data exists
+      if (response.success && response.data?.user) {
+        // Update user in localStorage
+        localStorage.setItem("user", JSON.stringify(response.data.user));
+
+        showToast("Espace émotionnel créé avec succès !", "success");
+
+        // Redirect to home page
+        setTimeout(() => {
+          window.location.href = "/home";
+        }, 1000);
+      } else {
+        throw new Error(
+          response.message || "Erreur lors de la création du profil"
+        );
+      }
+    } catch (error) {
+      showToast(
+        error instanceof Error
+          ? error.message
+          : "Erreur lors de la création du profil",
+        "error"
+      );
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const genderOptions = [
@@ -113,6 +159,8 @@ export default function CreateProfilePage() {
     { value: "autre", label: "autre / non-binaire" },
     { value: "later", label: "Je décide plus tard (→ Universel par défaut)" },
   ];
+  // Show custom gender input only when "autre" is selected
+  const showCustomGender = formData.gender === "autre";
 
   return (
     <div className="min-h-screen bg-[#f4f6fc] flex flex-col justify-center py-4 px-4 sm:py-12 sm:px-6 lg:px-8">
@@ -222,6 +270,27 @@ export default function CreateProfilePage() {
                   </div>
                 </div>
               </div>
+
+              {/* Custom Gender Input - Conditionally rendered */}
+              {showCustomGender && (
+                <div>
+                  <label
+                    htmlFor="customGender"
+                    className="block text-sm font-medium text-black mb-2"
+                  >
+                    Précisez votre genre
+                  </label>
+                  <input
+                    id="customGender"
+                    name="customGender"
+                    type="text"
+                    value={formData.customGender}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-3 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-black focus:border-black text-sm bg-white"
+                    placeholder="Entrez votre genre"
+                  />
+                </div>
+              )}
 
               {/* Terms Acceptance */}
               <div className="mt-6 sm:mt-8">

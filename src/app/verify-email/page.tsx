@@ -3,10 +3,12 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { Toast, ToastType } from "../components/ui/Toast";
+import { userApi } from "../lib/api/user.api";
 
 export default function CheckEmailPage() {
   const [email, setEmail] = useState("");
   const [isResending, setIsResending] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [toast, setToast] = useState<{
     message: string;
     type: ToastType;
@@ -40,22 +42,81 @@ export default function CheckEmailPage() {
     }
   }, [searchParams]);
 
-  const handleResendEmail = () => {
-    setIsResending(true);
+  // pages/verify-email.tsx - Updated functions
+  const handleConfirmEmail = async () => {
+    const storedEmail = sessionStorage.getItem("pendingEmail");
+    const storedToken = sessionStorage.getItem("verificationToken");
 
-    // Simulate API call to resend verification email
-    setTimeout(() => {
-      setIsResending(false);
+    if (!storedEmail || !storedToken) {
+      showToast("Session invalide, veuillez recommencer", "error");
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const response = await userApi.verifyToken(storedEmail, storedToken);
+
+      if (response.success && response.data.authToken && response.data.user) {
+        // Store auth data
+        localStorage.setItem("authToken", response.data.authToken);
+        localStorage.setItem("user", JSON.stringify(response.data.user));
+
+        showToast("Email vérifié avec succès !", "success");
+
+        // Redirect based on onboarding status
+        setTimeout(() => {
+          if (response.data.user?.isOnboardingComplete) {
+            window.location.href = "/home";
+          } else {
+            window.location.href = "/create-profile";
+          }
+        }, 1000);
+      }
+    } catch (error) {
       showToast(
-        "Un nouvel email vient d'être envoyé à votre adresse.",
-        "success"
+        error instanceof Error
+          ? error.message
+          : "Erreur lors de la vérification",
+        "error"
       );
-    }, 1000);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleConfirmEmail = () => {
-    // Redirect to create profile page
-    window.location.href = "/create-profile";
+  const handleResendEmail = async () => {
+    const storedEmail = sessionStorage.getItem("pendingEmail");
+
+    if (!storedEmail) {
+      showToast("Email non trouvé", "error");
+      return;
+    }
+
+    setIsResending(true);
+
+    try {
+      const response = await userApi.signInWithEmail(storedEmail);
+
+      if (response.success) {
+        // Update stored token
+        sessionStorage.setItem(
+          "verificationToken",
+          response.data.verificationToken!
+        );
+        showToast(
+          "Un nouvel email vient d'être envoyé à votre adresse.",
+          "success"
+        );
+      }
+    } catch (error) {
+      showToast(
+        error instanceof Error ? error.message : "Erreur lors de l'envoi",
+        "error"
+      );
+    } finally {
+      setIsResending(false);
+    }
   };
 
   return (

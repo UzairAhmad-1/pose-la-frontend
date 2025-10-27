@@ -11,13 +11,16 @@ import {
   Compass,
   Pause,
 } from "lucide-react";
+import { useAuth } from "../../contexts/AuthContext";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [timeLeft, setTimeLeft] = useState({ days: 2, hours: 0, minutes: 0 });
+
+  const { user, isLoading, logout } = useAuth();
+  const isLoggedIn = !!user;
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -49,19 +52,25 @@ export default function Navbar() {
   const handleLogin = () => {
     setIsProfileOpen(false);
     setIsMenuOpen(false);
-    console.log("Navigate to login");
+    window.location.href = "/signup";
   };
 
   const handleSignup = () => {
     setIsProfileOpen(false);
     setIsMenuOpen(false);
-    console.log("Navigate to signup");
   };
 
   const handleLogout = () => {
-    setIsLoggedIn(false);
+    logout();
     setIsProfileOpen(false);
     setIsMenuOpen(false);
+    window.location.href = "/";
+  };
+
+  const handleProfile = () => {
+    setIsProfileOpen(false);
+    setIsMenuOpen(false);
+    // window.location.href = "/profile";
   };
 
   const isTrialActive =
@@ -153,10 +162,15 @@ export default function Navbar() {
             <div className="relative">
               <button
                 onClick={() => setIsProfileOpen(!isProfileOpen)}
-                className="p-1.5 rounded-md hover:bg-gray-100 transition-colors"
+                className="flex items-center space-x-2 p-1.5 rounded-md hover:bg-gray-100 transition-colors"
                 title="Profile"
               >
                 <User className="h-5 w-5 text-gray-600" />
+                {user?.name && (
+                  <span className="text-sm text-gray-700 max-w-24 truncate">
+                    {user.name}
+                  </span>
+                )}
               </button>
 
               {isProfileOpen && (
@@ -168,14 +182,21 @@ export default function Navbar() {
                   <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
                     {isLoggedIn ? (
                       <>
-                        <a
-                          href="/profile"
-                          className="flex items-center space-x-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
-                          onClick={() => setIsProfileOpen(false)}
+                        <div className="px-4 py-2 border-b border-gray-100">
+                          <p className="text-sm font-medium text-gray-900 truncate">
+                            {user.name || user.email}
+                          </p>
+                          <p className="text-xs text-gray-500 truncate">
+                            {user.email}
+                          </p>
+                        </div>
+                        <button
+                          onClick={handleProfile}
+                          className="flex items-center space-x-2 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors text-left"
                         >
                           <User className="h-4 w-4" />
                           <span>My Profile</span>
-                        </a>
+                        </button>
                         <button
                           onClick={handleLogout}
                           className="flex items-center space-x-2 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors text-left"
@@ -229,8 +250,18 @@ export default function Navbar() {
               onClick={() => setIsMenuOpen(false)}
             />
             <div className="lg:hidden border-t border-gray-200 py-4 relative z-50 bg-white">
+              {/* User Info - Mobile */}
+              {isLoggedIn && (
+                <div className="px-4 py-3 border-b border-gray-100 mb-4">
+                  <p className="text-sm font-medium text-gray-900">
+                    {user.name || user.email}
+                  </p>
+                  <p className="text-xs text-gray-500">{user.email}</p>
+                </div>
+              )}
+
               {/* Mobile Search */}
-              <div className="mb-4">
+              <div className="mb-4 px-4">
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                   <input
@@ -246,7 +277,7 @@ export default function Navbar() {
 
               {/* Promotional Badge - Mobile */}
               {isTrialActive && (
-                <div className="mb-4">
+                <div className="mb-4 px-4">
                   <a
                     href="/subscriptions"
                     className="bg-gradient-to-r from-orange-500 to-red-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:from-orange-600 hover:to-red-600 transition-all duration-200 block text-center"
@@ -273,7 +304,7 @@ export default function Navbar() {
               )}
 
               {/* Mobile Navigation Links */}
-              <div className="space-y-1 mb-4">
+              <div className="space-y-1 mb-4 px-2">
                 <a
                   href="/chat"
                   className="flex items-center space-x-3 py-3 px-2 text-gray-700 hover:text-black hover:bg-gray-50 rounded-md font-medium transition-colors"
@@ -303,17 +334,16 @@ export default function Navbar() {
               </div>
 
               {/* Mobile Auth Actions */}
-              <div className="border-t border-gray-200 pt-4">
+              <div className="border-t border-gray-200 pt-4 px-2">
                 {isLoggedIn ? (
                   <div className="space-y-1">
-                    <a
-                      href="/profile"
-                      className="flex items-center space-x-3 py-2 px-2 text-gray-700 hover:text-black hover:bg-gray-50 rounded-md transition-colors"
-                      onClick={() => setIsMenuOpen(false)}
+                    <button
+                      onClick={handleProfile}
+                      className="flex items-center space-x-3 w-full py-2 px-2 text-gray-700 hover:text-black hover:bg-gray-50 rounded-md transition-colors text-left"
                     >
                       <User className="h-4 w-4" />
                       <span>My Profile</span>
-                    </a>
+                    </button>
                     <button
                       onClick={handleLogout}
                       className="flex items-center space-x-3 w-full py-2 px-2 text-gray-700 hover:text-black hover:bg-gray-50 rounded-md transition-colors text-left"

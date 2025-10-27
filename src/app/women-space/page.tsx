@@ -1,466 +1,29 @@
 "use client";
 
 import { useState } from "react";
-import { Heart, Lock, Search, Filter, AlertTriangle } from "lucide-react";
-import  Navbar  from "../components/layout/Navbar";
+import {
+  Heart,
+  Lock,
+  Search,
+  Filter,
+  AlertTriangle,
+  MessageCircle,
+} from "lucide-react";
+import Navbar from "../components/layout/Navbar";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-
-// All 29 cards data with images
-const allCards = [
-  {
-    id: 1,
-    title: "Je ne veux plus supplier pour exister",
-    subtitle: "Auto-respect et Libération émotionnelle",
-    pitch:
-      "Tu en as assez de tendre la main pour exister dans les yeux des autres. Tu t'oublies en croyant devoir prouver ta valeur pour être aimée. Aujourd'hui, tu refuses de mendier ta place, tu la prends, parce qu'elle t'appartient.",
-    group: "Dignité",
-    locked: false,
-    sensitive: true,
-    isGhost: false,
-    hasPasserelle: false,
-    hasMirror: false,
-    image:
-      "https://images.unsplash.com/photo-1573165662973-4ab3cf3d3508?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=2069",
-  },
-  {
-    id: 2,
-    title: "Je veux retrouver ma dignité",
-    subtitle: "Reconstruction & Force intérieure",
-    pitch:
-      "Tu as trop plié, trop accepté, trop laissé passer ce qui t'a abîmée. Retrouver ta dignité, ce n'est pas effacer ce que tu as vécu, c'est décider de relever la tête malgré les blessures. Ton respect commence par toi, et personne ne peut te l'enlever.",
-    group: "Dignité",
-    locked: true,
-    sensitive: false,
-    isGhost: false,
-    hasPasserelle: false,
-    hasMirror: false,
-    image:
-      "https://plus.unsplash.com/premium_photo-1675733428753-1b902a7e34bf?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=2070",
-  },
-  {
-    id: 3,
-    title: "J'ai besoin de me demander pardon",
-    subtitle: "Pardon à soi et libération personnelle",
-    pitch:
-      "Tu te condamnes sans appel, comme si tes erreurs disaient toute ta valeur. Tu portes depuis trop longtemps le poids de la culpabilité. Te demander pardon à toi-même, c'est rouvrir un espace de douceur intérieure et accepter que tu as le droit de te relever.",
-    group: "Pardon de soi",
-    locked: true,
-    sensitive: true,
-    isGhost: false,
-    hasPasserelle: false,
-    hasMirror: false,
-    image:
-      "https://images.unsplash.com/photo-1554902748-feaf536fc594?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=2070",
-  },
-  {
-    id: 4,
-    title: "Je n'ai plus envie d'aimer",
-    subtitle: "Blessures émotionnelles",
-    pitch:
-      "Tu crois à l'amour, tu donnes, et chaque blessure laisse une trace. Ton cœur se ferme, non pas par manque d'envie mais par trop de fatigue. Tu ne rejettes pas l'amour, tu as juste besoin de repos avant de pouvoir y croire à nouveau.",
-    group: "Blessures invisibles",
-    locked: true,
-    sensitive: true,
-    isGhost: false,
-    hasPasserelle: false,
-    hasMirror: false,
-    image:
-      "https://images.unsplash.com/photo-1505483531331-fc3cf89fd382?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=2076",
-  },
-  {
-    id: 5,
-    title: "J'ai encore des choses à lui dire mais je ne veux plus lui parler",
-    subtitle: "Non-dits, tension intérieure / fermeture protectrice",
-    pitch:
-      "Les phrases coincées brûlent à l'intérieur comme des braises. Tu veux les sortir pour respirer mais tu refuses de les remettre entre ses mains. Ces mots ne sont plus pour lui, ils sont pour toi, pour alléger ton cœur et t'en libérer.",
-    group: "L'entre-deux émotionnel",
-    locked: false,
-    sensitive: false,
-    isGhost: true,
-    hasPasserelle: true,
-    hasMirror: true,
-    image:
-      "https://plus.unsplash.com/premium_photo-1661423910129-9c00490bd914?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1170",
-  },
-  {
-    id: 6,
-    title: "Je ne suis plus celle d'avant",
-    subtitle: "Transformation intérieure / Reconstruction invisible",
-    pitch:
-      "Tu ne reconnais plus celle que tu étais avant la tempête. Tes blessures laissent des marques, visibles ou invisibles, et tu sens que quelque chose en toi change. Apprendre à vivre avec cette nouvelle version de toi, ce n'est pas perdre ton identité. C'est découvrir une force qui naît de ce que tu as traversé.",
-    group: "L'entre-deux émotionnel",
-    locked: true,
-    sensitive: true,
-    isGhost: true,
-    hasPasserelle: true,
-    hasMirror: true,
-    image:
-      "https://images.unsplash.com/photo-1536010447069-d2c8af80c584?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1170",
-  },
-  {
-    id: 7,
-    title: "Je veux qu'il m'aime comme je l'aime",
-    subtitle: "Réciprocité affective / Déséquilibre amoureux",
-    pitch:
-      "Tu l'aimes fort, peut-être trop fort, et tu attends qu'il t'aime avec la même force. Chaque geste, chaque silence devient une mesure de ce décalage. Tu veux que l'amour soit réciproque, égal, que ton cœur trouve enfin son reflet dans le sien.",
-    group: "Réciprocité affective",
-    locked: false,
-    sensitive: true,
-    isGhost: false,
-    hasPasserelle: true,
-    hasMirror: true,
-    image:
-      "https://images.unsplash.com/photo-1573165662973-4ab3cf3d3508?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=2069",
-  },
-  {
-    id: 8,
-    title: "Je veux nettoyer ce qu'il a laissé en moi",
-    subtitle: "Résidus émotionnels / Empreintes invisibles",
-    pitch:
-      "Tu portes encore ses marques, comme une empreinte qui colle à ta peau et à ton esprit. Ce qu'il laisse influence tes pensées, tes émotions, tes choix. Tu veux te libérer de ce passé, retrouver un espace intérieur qui t'appartient vraiment.",
-    group: "L'entre-deux émotionnel",
-    locked: true,
-    sensitive: true,
-    isGhost: true,
-    hasPasserelle: true,
-    hasMirror: true,
-    image:
-      "https://plus.unsplash.com/premium_photo-1675733428753-1b902a7e34bf?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=2070",
-  },
-  {
-    id: 9,
-    title: "Je veux arrêter de justifier ce qu'il m'a fait",
-    subtitle: "Pardon qui te blesse",
-    pitch:
-      "Tu cherches mille explications pour atténuer ses fautes. Tu couvres ses manquements de raisons, comme si ses blessures excusaient les tiennes. Mais à force de justifier, tu te trahis toi-même. Reconnaître la douleur sans la maquiller, c'est le premier pas vers la liberté.",
-    group: "L'entre-deux émotionnel",
-    locked: true,
-    sensitive: true,
-    isGhost: true,
-    hasPasserelle: false,
-    hasMirror: false,
-    image:
-      "https://images.unsplash.com/photo-1554902748-feaf536fc594?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=2070",
-  },
-  {
-    id: 10,
-    title: "Je crois qu'on est connectés, mais je rêve",
-    subtitle: "Illusion de lien / Disparition / Fracture brutale",
-    pitch:
-      "Tu penses qu'il y a un fil invisible entre vous, une complicité unique. Chaque geste, chaque mot semble preuve de ce lien. Mais tu découvres que c'est peut-être toi seule qui y croit. Cette désillusion fait mal, mais elle t'invite aussi à voir la réalité en face.",
-    group: "L'entre-deux émotionnel",
-    locked: false,
-    sensitive: false,
-    isGhost: true,
-    hasPasserelle: false,
-    hasMirror: false,
-    image:
-      "https://images.unsplash.com/photo-1505483531331-fc3cf89fd382?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=2076",
-  },
-  {
-    id: 11,
-    title: "Quand tout s'effondre",
-    subtitle: "Perte de repères / Bascule brutale / Ressenti de vide",
-    pitch:
-      "Un mot, un silence, une rupture, et tout s'écroule. Le sol se dérobe, tes repères volent en éclats, tu suffoques dans ce vide. C'est le vertige du plus rien, cette impression d'être englouti·e. Mais même dans cet effondrement, il reste une chose : toi, debout au milieu des débris.",
-    group: "L'entre-deux émotionnel",
-    locked: true,
-    sensitive: true,
-    isGhost: true,
-    hasPasserelle: false,
-    hasMirror: false,
-    image:
-      "https://plus.unsplash.com/premium_photo-1661423910129-9c00490bd914?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1170",
-  },
-  {
-    id: 12,
-    title: "J'ai honte d'aimer encore un homme qui m'a tant blessée",
-    subtitle: "Ambivalence / Trahison de soi",
-    pitch:
-      "Ton cœur s'accroche malgré les coups. Malgré tout ce qui prouve que tu devrais lâcher, tu ressens encore de l'amour. Et cette tendresse te brûle de honte, comme si aimer celui qui t'a blessé effaçait ta valeur. Mais ce paradoxe ne fait pas de toi une faiblesse.",
-    group: "L'entre-deux émotionnel",
-    locked: true,
-    sensitive: true,
-    isGhost: true,
-    hasPasserelle: false,
-    hasMirror: false,
-    image:
-      "https://images.unsplash.com/photo-1536010447069-d2c8af80c584?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1170",
-  },
-  {
-    id: 13,
-    title: "Il ne m'a pas brisée mais je ne suis plus tout à fait intacte",
-    subtitle: "Traces & cicatrices invisibles",
-    pitch:
-      "Tu avances debout, mais avec des fissures invisibles. Tu n'es pas détruite, mais tu n'es plus intacte non plus. Tes blessures laissent des marques qui changent ta manière d'aimer, de faire confiance, de croire à nouveau.",
-    group: "L'entre-deux émotionnel",
-    locked: true,
-    sensitive: true,
-    isGhost: true,
-    hasPasserelle: false,
-    hasMirror: false,
-    image:
-      "https://images.unsplash.com/photo-1573165662973-4ab3cf3d3508?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=2069",
-  },
-  {
-    id: 14,
-    title: "J'attends un pardon qui n'arrivera jamais",
-    subtitle: "Pardon qui n'arrive jamais",
-    pitch:
-      "Tu attends des mots qui ne viendront jamais. Un aveu, un pardon, une reconnaissance de la douleur infligée. Et plus tu attends, plus le silence pèse. Accepter qu'il ne s'excusera pas, c'est reprendre le pouvoir de guérir sans son accord.",
-    group: "L'entre-deux émotionnel",
-    locked: true,
-    sensitive: true,
-    isGhost: true,
-    hasPasserelle: true,
-    hasMirror: true,
-    image:
-      "https://plus.unsplash.com/premium_photo-1675733428753-1b902a7e34bf?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=2070",
-  },
-  {
-    id: 15,
-    title: "J'ai tout donné et j'ai l'impression de n'avoir rien reçu",
-    subtitle: "Épuisement affectif / Don sans retour",
-    pitch:
-      "Tu donnes ton énergie, ton amour, ton temps, ton cœur entier. À force de tout offrir, tu t'effaces peu à peu. Et il ne te reste qu'un vide amer : celui d'avoir tout donné, sans jamais recevoir en retour.",
-    group: "L'entre-deux émotionnel",
-    locked: true,
-    sensitive: true,
-    isGhost: true,
-    hasPasserelle: false,
-    hasMirror: false,
-    image:
-      "https://images.unsplash.com/photo-1554902748-feaf536fc594?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=2070",
-  },
-  {
-    id: 16,
-    title: "Je retombe toujours sur le même genre d'hommes",
-    subtitle: "Schémas répétitifs / Attraction toxique",
-    pitch:
-      "Les visages changent mais l'histoire reste la même. Tu crois que cette fois est différente, et pourtant tu retrouves les mêmes blessures. Comme si un fil invisible te ramenait vers le même genre d'hommes et de douleurs.",
-    group: "L'entre-deux émotionnel",
-    locked: false,
-    sensitive: false,
-    isGhost: true,
-    hasPasserelle: false,
-    hasMirror: false,
-    image:
-      "https://images.unsplash.com/photo-1505483531331-fc3cf89fd382?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=2076",
-  },
-  {
-    id: 17,
-    title: "Je suis vide mais j'ai pas le droit de craquer",
-    subtitle: "Épuisement émotionnel / Charge invisible",
-    pitch:
-      "Tu avances comme une coquille vide, en serrant les dents pour ne rien laisser paraître. Tu crois que tu dois tenir, que tu n'as pas le droit de t'effondrer. Mais ce poids silencieux t'épuise et t'éloigne un peu plus de toi-même à chaque pas.",
-    group: "L'entre-deux émotionnel",
-    locked: false,
-    sensitive: false,
-    isGhost: true,
-    hasPasserelle: false,
-    hasMirror: false,
-    image:
-      "https://plus.unsplash.com/premium_photo-1661423910129-9c00490bd914?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1170",
-  },
-  {
-    id: 18,
-    title: "Je ne suis plus triste mais je ne suis pas en paix",
-    subtitle: "Inachèvement émotionnel / Paix intérieure absente",
-    pitch:
-      "Tu ne pleures plus, tu ne souffres plus comme avant. Mais au fond, quelque chose reste en suspens. Entre le passé et l'apaisement, tu vis dans un entre-deux où la paix n'arrive pas à s'installer.",
-    group: "L'entre-deux émotionnel",
-    locked: true,
-    sensitive: true,
-    isGhost: true,
-    hasPasserelle: false,
-    hasMirror: false,
-    image:
-      "https://images.unsplash.com/photo-1536010447069-d2c8af80c584?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1170",
-  },
-  {
-    id: 19,
-    title: "Besoin de reconnaissance",
-    subtitle: "Quête d'amour et validation",
-    pitch:
-      "Tu donnes, tu fais, tu es là, mais c'est comme si tout passait inaperçu. Ton cœur attend un signe, un regard qui dise : je te vois, tu comptes. Le besoin de reconnaissance n'est pas une faiblesse, c'est un désir profond de sentir que ta valeur existe vraiment.",
-    group: "Blessures invisibles",
-    locked: true,
-    sensitive: true,
-    isGhost: false,
-    hasPasserelle: false,
-    hasMirror: false,
-    image:
-      "https://images.unsplash.com/photo-1573165662973-4ab3cf3d3508?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=2069",
-  },
-  {
-    id: 20,
-    title: "Je n'ai dit à personne ce qu'il m'a fait",
-    subtitle: "Silence imposé / Fardeau intérieur",
-    pitch:
-      "Tu portes en silence une vérité trop lourde. Les mots coincés brûlent à l'intérieur et t'isolent du monde. Ce secret te ronge parce qu'il reste enfermé. Mettre des mots, c'est briser le mur qui t'étouffe.",
-    group: "Secrets lourds",
-    locked: true,
-    sensitive: true,
-    isGhost: false,
-    hasPasserelle: false,
-    hasMirror: false,
-    image:
-      "https://plus.unsplash.com/premium_photo-1675733428753-1b902a7e34bf?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=2070",
-  },
-  {
-    id: 21,
-    title: "J'ai pensé à me faire du mal je n'en ai parlé à personne",
-    subtitle: "Idées suicidaires / Isolement",
-    pitch:
-      "Un jour, l'idée t'effleure, comme une ombre qui traverse l'esprit. Tu ne la dis à personne, par peur, par honte, ou pour ne pas inquiéter. Alors tu portes ce poids seule, en silence. Mais cette pensée ne te définit pas.",
-    group: "Pensées sombres",
-    locked: true,
-    sensitive: true,
-    isGhost: false,
-    hasPasserelle: false,
-    hasMirror: false,
-    image:
-      "https://images.unsplash.com/photo-1554902748-feaf536fc594?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=2070",
-  },
-  {
-    id: 22,
-    title: "Fausse couche",
-    subtitle: "Deuil invisible / Solitude silencieuse",
-    pitch:
-      "Tu portes une vie qui n'a pas vu le jour, et avec elle un espoir brisé. La fausse couche laisse un vide invisible aux autres mais immense en toi. C'est une douleur intime, souvent tue, que peu comprennent vraiment.",
-    group: "Parentalité et épreuves intimes",
-    locked: true,
-    sensitive: true,
-    isGhost: false,
-    hasPasserelle: false,
-    hasMirror: false,
-    image:
-      "https://images.unsplash.com/photo-1505483531331-fc3cf89fd382?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=2076",
-  },
-  {
-    id: 23,
-    title: "Envie de bébé",
-    subtitle: "Attente / Espoir / Pression intime",
-    pitch:
-      "Ce désir grandit en toi comme une évidence. Tu l'imagines, tu l'attends, tu le ressens dans ton corps et dans ton cœur. L'envie de bébé n'est pas seulement un projet, c'est un appel profond à transmettre, à aimer autrement.",
-    group: "Parentalité et désirs profonds",
-    locked: false,
-    sensitive: false,
-    isGhost: false,
-    hasPasserelle: false,
-    hasMirror: false,
-    image:
-      "https://plus.unsplash.com/premium_photo-1661423910129-9c00490bd914?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1170",
-  },
-  {
-    id: 24,
-    title: "L'arrivée de bébé",
-    subtitle: "Joie / Adaptation / Fatigue",
-    pitch:
-      "Un bébé arrive et ton monde bascule. Joie immense et fatigue profonde se mêlent, entre émerveillement et vertige. Ce nouveau rôle chamboule tout ton quotidien et ton identité.",
-    group: "Parentalité et bouleversements",
-    locked: false,
-    sensitive: false,
-    isGhost: false,
-    hasPasserelle: false,
-    hasMirror: false,
-    image:
-      "https://images.unsplash.com/photo-1536010447069-d2c8af80c584?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1170",
-  },
-  {
-    id: 25,
-    title: "Le baby blues",
-    subtitle: "Tristesse passagère / Hormones / Épuisement",
-    pitch:
-      "Après la naissance, on attend de toi des sourires et de la joie. Mais à l'intérieur, tu ressens surtout une vague de tristesse et de fragilité. Le baby blues brouille les émotions : tu aimes ton bébé et pourtant tu te sens submergée.",
-    group: "Parentalité et post-partum",
-    locked: true,
-    sensitive: true,
-    isGhost: false,
-    hasPasserelle: false,
-    hasMirror: false,
-    image:
-      "https://images.unsplash.com/photo-1573165662973-4ab3cf3d3508?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=2069",
-  },
-  {
-    id: 26,
-    title: "Dépression post-partum",
-    subtitle: "Vulnérabilité profonde / Isolement / Tabou",
-    pitch:
-      "Ce qui devrait être un moment de bonheur se transforme en cage invisible. Tu souris parfois, mais au fond tu suffoques sous le poids de la fatigue, de la solitude, de l'incompréhension. La dépression post-partum ne parle pas d'un manque d'amour.",
-    group: "Parentalité et santé mentale",
-    locked: true,
-    sensitive: true,
-    isGhost: false,
-    hasPasserelle: false,
-    hasMirror: false,
-    image:
-      "https://plus.unsplash.com/premium_photo-1675733428753-1b902a7e34bf?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=2070",
-  },
-  {
-    id: 27,
-    title: "Je veux qu'il me regrette",
-    subtitle: "Désir de revanche / Reconnaissance affective",
-    pitch:
-      "Tu veux qu'il ouvre les yeux, qu'il comprenne enfin ce qu'il a perdu. Qu'un jour, il ressente ce vide que son absence a laissé en toi. Ce n'est pas seulement de la revanche, c'est le cri de ta valeur ignorée.",
-    group: "L'entre-deux émotionnel",
-    locked: false,
-    sensitive: true,
-    isGhost: true,
-    hasPasserelle: false,
-    hasMirror: false,
-    image:
-      "https://images.unsplash.com/photo-1554902748-feaf536fc594?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=2070",
-  },
-  {
-    id: 28,
-    title: "Je me sens tachée",
-    subtitle: "Honte intime / Sentiment d'impureté / Marque intérieure",
-    pitch:
-      "Certains vécus laissent une empreinte qui semble impossible à effacer. Tu avances en croyant que cette tache est visible aux yeux du monde. Mais ton histoire ne te définit pas à jamais : elle raconte ce que tu as traversé, pas qui tu es.",
-    group: "Blessures invisibles",
-    locked: true,
-    sensitive: true,
-    isGhost: false,
-    hasPasserelle: true,
-    hasMirror: true,
-    image:
-      "https://images.unsplash.com/photo-1505483531331-fc3cf89fd382?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=2076",
-  },
-  {
-    id: 29,
-    title: "Son silence me fait douter de sa présence",
-    subtitle: "Besoin de clarté / Peur de distance",
-    pitch:
-      "Quand il ne parle pas, je me sens perdue. Son silence devient un vide qui m'éloigne. J'ai besoin de clarté, de mots, même imparfaits. Sans ça, j'ai l'impression qu'il me cache quelque chose ou qu'il s'éloigne déjà.",
-    group: "Face à moi-même",
-    locked: false,
-    sensitive: false,
-    isGhost: false,
-    hasPasserelle: false,
-    hasMirror: false,
-    image:
-      "https://plus.unsplash.com/premium_photo-1661423910129-9c00490bd914?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1170",
-  },
-];
-
-// Extract unique groups - matching exactly from your image
-const groups = [
-  "Toutes les cartes",
-  "Dignité",
-  "Pardon de soi",
-  "Blessures invisibles",
-  "L'entre-deux émotionnel",
-];
+import { allCards, groups } from "../lib/cardData";
 
 export default function WomenSpacePage() {
   const [selectedGroup, setSelectedGroup] = useState("Toutes les cartes");
   const [searchQuery, setSearchQuery] = useState("");
-  const [showSensitiveWarning, setShowSensitiveWarning] = useState(false);
-  const [selectedCard, setSelectedCard] = useState<any>(null);
-  const [sensitiveMode, setSensitiveMode] = useState(false);
+  const [activeModal, setActiveModal] = useState<
+    "sensitive" | "ghost" | "mirror" | "bridge" | null
+  >(null);
+
+  const [selectedCard, setSelectedCard] = useState<Card | null>(null);
   const router = useRouter();
+
   // Filter cards based on selected group and search query
   const filteredCards = allCards.filter((card) => {
     const matchesGroup =
@@ -468,35 +31,84 @@ export default function WomenSpacePage() {
     const matchesSearch =
       card.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       card.subtitle.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesSensitiveMode = sensitiveMode || !card.sensitive;
 
-    return matchesGroup && matchesSearch && matchesSensitiveMode;
+    return matchesGroup && matchesSearch;
   });
 
-  // Add this debug log to see which cards are being filtered
-
-  // Also add a debug log in handleCardClick
-  const handleCardClick = (card: any) => {
+  // Handle card click with proper modal management
+  const handleCardClick = (card: Card) => {
     if (card.locked) {
       return;
     }
 
-    if (card.sensitive) {
-      console.log("Showing sensitive warning for card:", card.id);
-      setSelectedCard(card);
-      setShowSensitiveWarning(true);
-    } else {
-      router.push(`/women-space/${card.id}`);
+    switch (card.cardType) {
+      case "sensitive":
+        setSelectedCard(card);
+        setActiveModal("sensitive");
+        break;
+
+      case "ghost":
+        setSelectedCard(card);
+        setActiveModal("ghost");
+        break;
+
+      default:
+        router.push(`/women-space/${card.id}`);
     }
   };
 
+  const handleMirrorClick = (card: Card, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setSelectedCard(card);
+    setActiveModal("mirror");
+  };
+
+  const handlePasserelleClick = (card: Card, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setSelectedCard(card);
+    setActiveModal("bridge");
+  };
+
+  const handleAccessGhost = (option: "continue" | "sensitive" | "later") => {
+    setActiveModal(null);
+    if (option === "continue" && selectedCard) {
+      router.push(`/women-space/${selectedCard.id}`);
+    }
+  };
+
+  const handleAccessBridge = (
+    target: "crossed-language" | "mirror" | "default"
+  ) => {
+    setActiveModal(null);
+    switch (target) {
+      case "crossed-language":
+        router.push("/crossed-emotional-language");
+        break;
+      case "mirror":
+        if (selectedCard?.mirrorCardId) {
+          router.push(`/men-spaces/${selectedCard.mirrorCardId}`);
+        }
+        break;
+      default:
+        if (selectedCard) {
+          router.push(`/women-space/${selectedCard.id}`);
+        }
+    }
+  };
+  // Modal handlers
   const handleAccessSensitive = () => {
-    setSensitiveMode(true);
-    setShowSensitiveWarning(false);
+    setActiveModal(null);
     if (selectedCard) {
       router.push(`/women-space/${selectedCard.id}`);
     }
-    setSelectedCard(null); // Clear the selected card after navigation
+  };
+
+  const handleAccessMirror = () => {
+    setActiveModal(null);
+    if (selectedCard?.mirrorCardId) {
+      // Navigate to male space mirror card
+      router.push(`/men-spaces/${selectedCard.mirrorCardId}`);
+    }
   };
 
   return (
@@ -504,22 +116,19 @@ export default function WomenSpacePage() {
       <Navbar />
 
       {/* Sensitive Content Warning Modal */}
-      {showSensitiveWarning && (
+      {activeModal === "sensitive" && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl p-6 max-w-sm w-full text-center shadow-xl">
             <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <AlertTriangle className="w-6 h-6 text-orange-500" />
             </div>
-
             <h3 className="text-lg font-bold mb-3 text-gray-900">
               Contenu sensible
             </h3>
-
             <p className="text-sm text-gray-600 mb-6 leading-relaxed">
               Cette carte touche à des souvenirs sensibles ou intimes. Veux-tu y
               accéder maintenant ?
             </p>
-
             <div className="flex gap-3">
               <button
                 onClick={handleAccessSensitive}
@@ -528,10 +137,120 @@ export default function WomenSpacePage() {
                 Accéder
               </button>
               <button
-                onClick={() => setShowSensitiveWarning(false)}
+                onClick={() => setActiveModal(null)}
                 className="flex-1 bg-gray-100 text-gray-700 py-2.5 px-4 rounded-lg hover:bg-gray-200 transition-colors font-medium text-sm"
               >
                 Pas maintenant
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Ghost Card Modal */}
+      {activeModal === "ghost" && (
+        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl p-6 max-w-sm w-full text-center shadow-xl">
+            <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <MessageCircle className="w-6 h-6 text-purple-500" />
+            </div>
+            <h3 className="text-lg font-bold mb-3 text-gray-900">
+              Carte Fantôme
+            </h3>
+            <p className="text-sm text-gray-600 mb-4 leading-relaxed">
+              Cette carte explore des émotions intenses (colère, désir de
+              revanche). Elle t'invite à revisiter ce qui hante ton cœur avec
+              douceur.
+            </p>
+            <div className="space-y-2">
+              <button
+                onClick={() => handleAccessGhost("continue")}
+                className="w-full bg-purple-500 text-white py-2.5 px-4 rounded-lg hover:bg-purple-600 transition-colors font-medium text-sm"
+              >
+                Continuer maintenant
+              </button>
+              <button
+                onClick={() => handleAccessGhost("sensitive")}
+                className="w-full bg-orange-500 text-white py-2.5 px-4 rounded-lg hover:bg-orange-600 transition-colors font-medium text-sm"
+              >
+                Activer le mode sensible
+              </button>
+              <button
+                onClick={() => handleAccessGhost("later")}
+                className="w-full bg-gray-100 text-gray-700 py-2.5 px-4 rounded-lg hover:bg-gray-200 transition-colors font-medium text-sm"
+              >
+                Garder pour plus tard
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Mirror Card Modal */}
+      {activeModal === "mirror" && (
+        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl p-6 max-w-sm w-full text-center shadow-xl">
+            <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <MessageCircle className="w-6 h-6 text-blue-500" />
+            </div>
+            <h3 className="text-lg font-bold mb-3 text-gray-900">
+              Changer de perspective
+            </h3>
+            <p className="text-sm text-gray-600 mb-6 leading-relaxed">
+              Vous allez découvrir comment l'autre personne pourrait vivre cette
+              situation. Ce n'est pas pour vous identifier, mais pour comprendre
+              son univers émotionnel.
+            </p>
+            <div className="flex gap-3">
+              <button
+                onClick={handleAccessMirror}
+                className="flex-1 bg-blue-500 text-white py-2.5 px-4 rounded-lg hover:bg-blue-600 transition-colors font-medium text-sm"
+              >
+                Voir sa perspective
+              </button>
+              <button
+                onClick={() => setActiveModal(null)}
+                className="flex-1 bg-gray-100 text-gray-700 py-2.5 px-4 rounded-lg hover:bg-gray-200 transition-colors font-medium text-sm"
+              >
+                Rester ici
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Bridge Card Modal */}
+      {activeModal === "bridge" && (
+        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl p-6 max-w-sm w-full text-center shadow-xl">
+            <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <MessageCircle className="w-6 h-6 text-green-500" />
+            </div>
+            <h3 className="text-lg font-bold mb-3 text-gray-900">
+              Carte Passerelle
+            </h3>
+            <p className="text-sm text-gray-600 mb-4 leading-relaxed">
+              Cette carte vous invite à explorer d'autres dimensions
+              émotionnelles.
+            </p>
+            <div className="space-y-2">
+              <button
+                onClick={() => handleAccessBridge("crossed-language")}
+                className="w-full bg-green-500 text-white py-2.5 px-4 rounded-lg hover:bg-green-600 transition-colors font-medium text-sm"
+              >
+                Langage Émotionnel Croisé
+              </button>
+              <button
+                onClick={() => handleAccessBridge("mirror")}
+                className="w-full bg-blue-500 text-white py-2.5 px-4 rounded-lg hover:bg-blue-600 transition-colors font-medium text-sm"
+              >
+                Voir sa perspective
+              </button>
+              <button
+                onClick={() => setActiveModal(null)}
+                className="w-full bg-gray-100 text-gray-700 py-2.5 px-4 rounded-lg hover:bg-gray-200 transition-colors font-medium text-sm"
+              >
+                Rester ici
               </button>
             </div>
           </div>
@@ -568,7 +287,19 @@ export default function WomenSpacePage() {
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 py-12">
         {/* Search and Filter Section */}
-        <div className="mb-5">
+        <div className="mb-8">
+          {/* Search Bar */}
+          <div className="relative mb-6">
+            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <input
+              type="text"
+              placeholder="Rechercher une carte..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-12 pr-4 py-4 bg-white border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent text-gray-900 placeholder-gray-400"
+            />
+          </div>
+
           {/* Filter Section */}
           <div className="space-y-4">
             <div className="flex items-center gap-3">
@@ -579,7 +310,7 @@ export default function WomenSpacePage() {
             </div>
 
             {/* Filter Pills */}
-            <div className="flex flex-wrap gap-3 mb-4">
+            <div className="flex flex-wrap gap-3">
               {groups.map((group) => (
                 <button
                   key={group}
@@ -594,41 +325,6 @@ export default function WomenSpacePage() {
                 </button>
               ))}
             </div>
-
-            {/* Sensitive Mode Toggle */}
-            <div className="flex items-center gap-3 bg-white p-4 rounded-2xl border border-gray-200">
-              {/* Non-clickable label text */}
-              <span
-                id="sensitiveModeLabel"
-                className="text-sm font-semibold text-gray-600"
-              >
-                Mode sensible
-              </span>
-
-              {/* Toggle switch */}
-              <label
-                className="relative inline-flex items-center cursor-pointer"
-                aria-labelledby="sensitiveModeLabel"
-              >
-                <input
-                  type="checkbox"
-                  className="sr-only peer"
-                  checked={sensitiveMode}
-                  onChange={(e) => setSensitiveMode(e.target.checked)}
-                  title="Activer ou désactiver le mode sensible"
-                />
-                <div
-                  className="w-11 h-6 bg-gray-200 rounded-full peer-focus:outline-none peer-checked:bg-pink-500
-      after:content-[''] after:absolute after:top-[2px] after:left-[2px]
-      after:bg-white after:border-gray-300 after:border after:rounded-full
-      after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full peer-checked:after:border-white"
-                ></div>
-              </label>
-
-              <span className="text-xs text-gray-500 ml-2">
-                {sensitiveMode ? "Activé" : "Désactivé"}
-              </span>
-            </div>
           </div>
         </div>
 
@@ -638,7 +334,7 @@ export default function WomenSpacePage() {
             <div
               key={card.id}
               className={`bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 ${
-                card.locked ? "opacity-75" : "cursor-pointer"
+                card.locked ? "opacity-75" : "cursor-pointer hover:scale-105"
               }`}
               onClick={() => handleCardClick(card)}
             >
@@ -657,22 +353,27 @@ export default function WomenSpacePage() {
                 )}
 
                 {/* Badges */}
-                {/* <div className="absolute top-3 left-3 right-3 flex justify-between">
+                <div className="absolute top-3 left-3 right-3 flex justify-between">
                   <div className="flex gap-2">
                     {card.isGhost && (
                       <span className="bg-purple-500 text-white text-xs px-3 py-1 rounded-full font-semibold shadow-sm">
-                        Carte fantôme
+                        Fantôme
+                      </span>
+                    )}
+                    {card.cardType === "bridge" && (
+                      <span className="bg-green-500 text-white text-xs px-3 py-1 rounded-full font-semibold shadow-sm">
+                        Passerelle
                       </span>
                     )}
                   </div>
                   <div>
                     {card.sensitive && (
                       <span className="bg-orange-500 text-white text-xs px-3 py-1 rounded-full font-semibold shadow-sm">
-                        Mode sensible
+                        Sensible
                       </span>
                     )}
                   </div>
-                </div> */}
+                </div>
               </div>
 
               {/* Card Content */}
@@ -727,32 +428,26 @@ export default function WomenSpacePage() {
                       </svg>
                     </button>
 
-                    {/* Special Buttons for Ghost Cards */}
+                    {/* Special Buttons */}
                     {(card.hasPasserelle || card.hasMirror) && (
                       <div className="flex gap-2">
                         {card.hasPasserelle && (
                           <button
-                            className="flex-1 bg-purple-50 text-purple-700 px-4 py-2 rounded-xl hover:bg-purple-100 transition-colors text-sm font-semibold border border-purple-200"
-                            onClick={(e) => e.stopPropagation()}
+                            onClick={(e) => handlePasserelleClick(card, e)}
+                            className="flex-1 bg-green-50 text-green-700 px-4 py-2 rounded-xl hover:bg-green-100 transition-colors text-sm font-semibold border border-green-200"
                           >
                             ☞ Passerelle
                           </button>
                         )}
                         {card.hasMirror && (
                           <button
+                            onClick={(e) => handleMirrorClick(card, e)}
                             className="flex-1 bg-blue-50 text-blue-700 px-4 py-2 rounded-xl hover:bg-blue-100 transition-colors text-sm font-semibold border border-blue-200"
-                            onClick={(e) => e.stopPropagation()}
                           >
                             ☐ Miroir
                           </button>
                         )}
                       </div>
-                    )}
-
-                    {card.isGhost && (
-                      <p className="text-xs text-center text-gray-500 italic">
-                        Carte fantôme - Contenu en exploration
-                      </p>
                     )}
                   </div>
                 )}

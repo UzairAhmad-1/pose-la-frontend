@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Toast, ToastType } from "../components/ui/Toast";
-
+import { userApi } from "../lib/api/user.api";
 export default function SignupPage() {
   const [email, setEmail] = useState("");
   const [acceptedTerms, setAcceptedTerms] = useState(false);
@@ -30,7 +30,7 @@ export default function SignupPage() {
     setToast((prev) => ({ ...prev, isVisible: false }));
   };
 
-  const handleEmailSubmit = (e: React.FormEvent) => {
+  const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!acceptedTerms) {
@@ -41,16 +41,43 @@ export default function SignupPage() {
       return;
     }
 
+    if (!validateEmail(email)) {
+      showToast("Veuillez entrer une adresse email valide", "error");
+      return;
+    }
+
     setIsLoading(true);
-    showToast("Lien de connexion envoyé à votre email !", "success");
 
-    // Simulate API call and redirect with email as query parameter
-    setTimeout(() => {
-      const encodedEmail = encodeURIComponent(email);
-      window.location.href = `/verify-email?email=${encodedEmail}`;
-    }, 1000);
+    try {
+      const response = await userApi.signInWithEmail(email);
+
+      if (response.success) {
+        showToast("Lien de connexion envoyé à votre email !", "success");
+
+        // Store email and verification token temporarily
+        sessionStorage.setItem("pendingEmail", email);
+        sessionStorage.setItem(
+          "verificationToken",
+          response.data.verificationToken!
+        );
+
+        // Redirect to verify email page
+        setTimeout(() => {
+          const encodedEmail = encodeURIComponent(email);
+          window.location.href = `/verify-email?email=${encodedEmail}`;
+        }, 1000);
+      }
+    } catch (error) {
+      showToast(
+        error instanceof Error
+          ? error.message
+          : "Erreur lors de l'envoi de l'email",
+        "error"
+      );
+    } finally {
+      setIsLoading(false);
+    }
   };
-
   const validateEmail = (email: string) => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   };
