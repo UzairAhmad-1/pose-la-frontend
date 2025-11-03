@@ -9,6 +9,7 @@ export interface ApiResponse<T = any> {
   data?: T;
   error?: string;
 }
+
 export interface AuthResponse {
   verificationToken?: string;
   authToken?: string;
@@ -20,6 +21,24 @@ export interface AuthResponse {
     isOnboardingComplete: boolean;
     name: string | null;
   };
+}
+
+export interface PhoneAuthResponse {
+  token: string;
+  user: {
+    id: string;
+    phone: string;
+    email: string | null;
+    name: string | null;
+    isOnboardingComplete: boolean;
+  };
+  isNewUser: boolean;
+  needsOnboarding: boolean;
+}
+
+export interface SendOTPResponse {
+  phone: string;
+  otp?: string; // Only in development
 }
 
 export interface OnboardingData {
@@ -89,8 +108,26 @@ class UserApiService {
     });
   }
 
+  // Send OTP to phone number
+  async sendPhoneOTP(phone: string): Promise<ApiResponse<SendOTPResponse>> {
+    return this.request<SendOTPResponse>("/auth/phone/send-otp", {
+      method: "POST",
+      body: JSON.stringify({ phone }),
+    });
+  }
+
+  // Verify phone OTP and login/signup
+  async verifyPhoneOTP(
+    phone: string,
+    otp: string
+  ): Promise<ApiResponse<PhoneAuthResponse>> {
+    return this.request<PhoneAuthResponse>("/auth/phone/verify", {
+      method: "POST",
+      body: JSON.stringify({ phone, otp }),
+    });
+  }
+
   // Complete onboarding
-  // lib/api/user.api.ts - Update completeOnboarding method
   async completeOnboarding(
     onboardingData: OnboardingData,
     authToken: string
@@ -127,6 +164,7 @@ class UserApiService {
       );
     }
   }
+
   // Get current user
   async getCurrentUser(
     authToken: string
