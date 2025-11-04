@@ -108,7 +108,7 @@ export default function PhoneLoginPage() {
           if (response.data.needsOnboarding) {
             router.push("/create-profile");
           } else {
-            router.push("/account-selection");
+            router.push("/home");
           }
         }, 1000);
       }

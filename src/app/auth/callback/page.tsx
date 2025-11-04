@@ -24,9 +24,9 @@ export default function AuthCallbackPage() {
 
       // Redirect based on onboarding status
       if (needsOnboarding === "true") {
-        router.push("/onboarding");
+        router.push("/create-profile");
       } else {
-        router.push("/account-selection");
+        router.push("/home");
       }
     } else {
       // No token found, redirect to signup

@@ -47,9 +47,9 @@ export default function SignupPage() {
 
       // Redirect based on onboarding status
       if (needsOnboarding === "true") {
-        router.push("/onboarding");
+        router.push("/create-profile");
       } else {
-        router.push("/account-selection");
+        router.push("/home");
       }
     }
   }, [searchParams, router]);

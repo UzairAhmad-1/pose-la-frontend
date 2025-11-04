@@ -27,14 +27,34 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     const token = localStorage.getItem("authToken");
     const userData = localStorage.getItem("user");
 
-    if (token && userData) {
+    if (token) {
       setAuthToken(token);
-      setUser(JSON.parse(userData));
+      const loadUser = async () => {
+        try {
+          const stored = userData ? JSON.parse(userData) : null;
+          let userInfo;
 
-      // Verify token is still valid
-      userApi.getCurrentUser(token).catch(() => {
-        logout();
-      });
+          if (stored && stored.id) {
+            // already have user object
+            userInfo = stored;
+          } else {
+            const response = await userApi.getCurrentUser(token);
+            userInfo = response.data.user; // ✅ extract nested user
+          }
+
+          setUser(userInfo);
+          localStorage.setItem("user", JSON.stringify(userInfo));
+        } catch (err) {
+          console.error("Auth check failed:", err);
+          logout();
+        } finally {
+          setIsLoading(false);
+        }
+      };
+
+      loadUser();
+    } else {
+      setIsLoading(false);
     }
 
     setIsLoading(false);
