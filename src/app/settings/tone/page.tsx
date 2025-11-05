@@ -65,11 +65,11 @@ export default function TonePersonalizationPage() {
         {/* Header */}
         <div className="text-center mb-8 sm:mb-12">
           <h1 className="text-3xl sm:text-4xl font-bold text-black mb-4">
-            Comment préfères-tu que je m'adresse à toi ?
+            Comment préfères-tu que je m&apos;adresse à toi ?
           </h1>
           <p className="text-black text-lg">
-            Je peux adapter mon ton à ta personnalité. Choisis l'approche qui te
-            correspond le mieux, tu pourras la modifier à tout moment.
+            Je peux adapter mon ton à ta personnalité. Choisis l&apos;approche
+            qui te correspond le mieux, tu pourras la modifier à tout moment.
           </p>
         </div>
 
@@ -81,7 +81,7 @@ export default function TonePersonalizationPage() {
                 htmlFor="preferredName"
                 className="block text-sm font-medium text-black mb-3"
               >
-                Comment veux-tu que je t'appelle ?
+                Comment veux-tu que je t&apos;appelle ?
               </label>
               <input
                 type="text"
@@ -100,7 +100,7 @@ export default function TonePersonalizationPage() {
                 htmlFor="profession"
                 className="block text-sm font-medium text-black mb-3"
               >
-                Qu'est-ce qui t'anime professionnellement ?
+                Qu&apos;est-ce qui t&apos;anime professionnellement ?
               </label>
               <input
                 type="text"
@@ -166,7 +166,7 @@ export default function TonePersonalizationPage() {
               disabled={!formData.tone}
               className="w-full bg-black text-white py-3 px-4 rounded-lg font-medium hover:bg-black transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              C'est parti
+              C&apos;est parti
             </button>
           </form>
         </div>

@@ -159,7 +159,8 @@ export default function EmailSigninPage() {
             {/* Additional Help Text */}
             <div className="mt-6 text-center">
               <p className="text-xs text-gray-500">
-                We'll email you a secure link to access your emotional space
+                We&apos;ll email you a secure link to access your emotional
+                space
               </p>
             </div>
           </div>

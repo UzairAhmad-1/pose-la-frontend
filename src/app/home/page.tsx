@@ -5,7 +5,6 @@ import Navbar from "../components/layout/Navbar";
 import { useState, useEffect } from "react";
 import { useAuth } from "../contexts/AuthContext";
 // This would typically come from your user context/auth
-type Gender = "female" | "male" | "other" | "not-specified" | null;
 
 interface JourneyCardProps {
   title: string;
@@ -100,7 +99,7 @@ function GenderPreferenceModal({
         <h3 className="text-xl font-bold mb-4">Choisis ton parcours</h3>
         <p className="text-gray-700 mb-6 leading-relaxed">
           Souhaites-tu que je te suggère le Parcours Femme, le Parcours Homme,
-          ou rester sur l'Espace Universel ?
+          ou rester sur l&apos;Espace Universel ?
           <br />
           <span className="text-sm text-gray-600 mt-2 block">
             Avantage : liberté complète — tu choisis ton propre chemin
@@ -249,7 +248,7 @@ export default function HomePage() {
             PARCOURS ET ESPACES PRINCIPAUX
           </h2>
           <p className="text-lg leading-relaxed max-w-3xl mx-auto">
-            Chaque espace qui t'est dédié est une invitation à déposer tes
+            Chaque espace qui t&apos;est dédié est une invitation à déposer tes
             émotions, à comprendre ce que tu traverses et à avancer à ton
             rythme, en toute bienveillance.
           </p>
@@ -295,8 +294,8 @@ export default function HomePage() {
             Modules complémentaires
           </h2>
           <p className="text-center text-gray-700 mb-8 text-lg">
-            Des outils et ressources pour enrichir ton parcours d'exploration
-            émotionnelle.
+            Des outils et ressources pour enrichir ton parcours
+            d&apos;exploration émotionnelle.
           </p>
 
           <div className="grid md:grid-cols-2 gap-6">

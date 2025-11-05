@@ -3,7 +3,7 @@
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
 
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T> {
   success: boolean;
   message: string;
   data?: T;
@@ -54,7 +54,7 @@ class CardApiService {
       }
 
       return data;
-    } catch (error) {
+    } catch (error: unknown) {
       throw new Error(
         error instanceof Error ? error.message : "Network error occurred"
       );

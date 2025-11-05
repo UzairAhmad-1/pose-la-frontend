@@ -39,7 +39,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
             userInfo = stored;
           } else {
             const response = await userApi.getCurrentUser(token);
-            userInfo = response.data.user; // ✅ extract nested user
+            userInfo = response.data?.user; // ✅ extract nested user
           }
 
           setUser(userInfo);

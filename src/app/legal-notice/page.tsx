@@ -24,11 +24,11 @@ const LegalNotice: React.FC = () => {
             {/* Section 1 */}
             <section>
               <h2 className="text-xl font-semibold text-black mb-4">
-                1. Éditeur de l'application
+                1. Éditeur de l&apos;application
               </h2>
               <div className="p-4 rounded bg-gray-50">
                 <p className="leading-relaxed mb-2">
-                  L'application POSE-LÀ est éditée par :{" "}
+                  L&apos;application POSE-LÀ est éditée par :{" "}
                   <strong>Madame Khady DIOUF</strong>, entrepreneure
                   individuelle, exerçant sous le nom commercial{" "}
                   <strong>GNOUNE</strong>.
@@ -39,7 +39,7 @@ const LegalNotice: React.FC = () => {
                 </p>
                 <p className="leading-relaxed mb-2">
                   Activité principale : vente en ligne et exploitation
-                  d'applications numériques utilisant l'intelligence
+                  d&apos;applications numériques utilisant l&apos;intelligence
                   artificielle
                 </p>
                 <p className="leading-relaxed mb-2">
@@ -49,21 +49,21 @@ const LegalNotice: React.FC = () => {
                 <div className="mt-3 space-y-1">
                   <p>
                     <strong>Adresse e-mail de contact :</strong>{" "}
-                    <a
+                    <Link
                       href="mailto:contact@pose-la.com"
                       className="text-black hover:text-gray-700 underline"
                     >
                       contact@pose-la.com
-                    </a>
+                    </Link>
                   </p>
                   <p>
                     <strong>Support utilisateur :</strong>{" "}
-                    <a
+                    <Link
                       href="mailto:support@pose-la.com"
                       className="text-black hover:text-gray-700 underline"
                     >
                       support@pose-la.com
-                    </a>
+                    </Link>
                   </p>
                 </div>
               </div>
@@ -83,14 +83,14 @@ const LegalNotice: React.FC = () => {
                   <p className="leading-relaxed mb-2">
                     Chemin de Pardiaux, 63000 Clermont-Ferrand, France
                   </p>
-                  <a
+                  <Link
                     href="https://www.o2switch.fr"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-black hover:text-gray-700 underline"
                   >
                     www.o2switch.fr
-                  </a>
+                  </Link>
                 </div>
 
                 <div className="p-4 rounded bg-gray-50">
@@ -99,16 +99,16 @@ const LegalNotice: React.FC = () => {
                     Hébergée sur <strong>SCALEWAY</strong> (Iliad Group)
                   </p>
                   <p className="leading-relaxed mb-2">
-                    8 rue de la Ville-l'Évêque, 75008 Paris, France
+                    8 rue de la Ville-l&apos;Évêque, 75008 Paris, France
                   </p>
-                  <a
+                  <Link
                     href="https://www.scaleway.com"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-black hover:text-gray-700 underline"
                   >
                     www.scaleway.com
-                  </a>
+                  </Link>
                 </div>
               </div>
             </section>
@@ -119,8 +119,8 @@ const LegalNotice: React.FC = () => {
                 3. Propriété intellectuelle
               </h2>
               <p className="leading-relaxed">
-                L'ensemble des contenus présents sur l'application et le site
-                POSE-LÀ (textes, visuels, logo, interface, architecture,
+                L&apos;ensemble des contenus présents sur l&apos;application et
+                le site POSE-LÀ (textes, visuels, logo, interface, architecture,
                 modules, etc.) est protégé par le Code de la propriété
                 intellectuelle. Toute reproduction, diffusion ou utilisation
                 sans autorisation préalable écrite de GNOUNE est interdite.
@@ -134,13 +134,14 @@ const LegalNotice: React.FC = () => {
               </h2>
               <div className="p-4 rounded bg-gray-50">
                 <p className="leading-relaxed mb-4">
-                  L'application POSE-LÀ propose un accompagnement émotionnel et
-                  réflexif, mais ne remplace en aucun cas un suivi psychologique
-                  ou médical.
+                  L&apos;application POSE-LÀ propose un accompagnement
+                  émotionnel et réflexif, mais ne remplace en aucun cas un suivi
+                  psychologique ou médical.
                 </p>
                 <p className="font-semibold">
-                  En cas de détresse ou de crise, l'utilisateur est invité à
-                  contacter les services d'urgence ou un professionnel de santé.
+                  En cas de détresse ou de crise, l&apos;utilisateur est invité
+                  à contacter les services d&apos;urgence ou un professionnel de
+                  santé.
                 </p>
               </div>
             </section>
@@ -159,7 +160,7 @@ const LegalNotice: React.FC = () => {
                 >
                   Politique de confidentialité
                 </Link>{" "}
-                disponible dans l'application.
+                disponible dans l&apos;application.
               </p>
             </section>
 
@@ -173,36 +174,36 @@ const LegalNotice: React.FC = () => {
                   <p className="font-semibold text-black mb-1">
                     Contact général / presse / partenariat :
                   </p>
-                  <a
+                  <Link
                     href="mailto:contact@pose-la.com"
                     className="text-black hover:text-gray-700 underline"
                   >
                     contact@pose-la.com
-                  </a>
+                  </Link>
                 </div>
 
                 <div>
                   <p className="font-semibold text-black mb-1">
                     Assistance utilisateur (connexion, abonnement, bug) :
                   </p>
-                  <a
+                  <Link
                     href="mailto:support@pose-la.com"
                     className="text-black hover:text-gray-700 underline"
                   >
                     support@pose-la.com
-                  </a>
+                  </Link>
                 </div>
 
                 <div>
                   <p className="font-semibold text-black mb-1">
                     Demandes liées aux paiements ou remboursements :
                   </p>
-                  <a
+                  <Link
                     href="mailto:commande@gnoune.com"
                     className="text-black hover:text-gray-700 underline"
                   >
                     commande@gnoune.com
-                  </a>
+                  </Link>
                 </div>
               </div>
             </section>

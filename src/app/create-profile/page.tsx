@@ -85,7 +85,7 @@ export default function CreateProfilePage() {
     const age = calculateAge(formData.birthDate);
     if (age < 18) {
       showToast(
-        "Accès non autorisé. POSE-LÀ est disponible uniquement pour les utilisateurs de 18 ans et plus. Revenez lorsque vous aurez l'âge requis.",
+        "Accès non autorisé. POSE-LÀ est disponible uniquement pour les utilisateurs de 18 ans et plus. Revenez lorsque vous aurez l&apos;âge requis.",
         "error"
       );
       return;
@@ -93,7 +93,7 @@ export default function CreateProfilePage() {
 
     if (!acceptedTerms) {
       showToast(
-        "Vous devez accepter les conditions d'utilisation et la politique de confidentialité",
+        "Vous devez accepter les conditions d&apos;utilisation et la politique de confidentialité",
         "error"
       );
       return;
@@ -302,7 +302,8 @@ export default function CreateProfilePage() {
                     className="mt-0.5 mr-3 rounded border-gray-300 text-black focus:ring-black flex-shrink-0"
                   />
                   <span className="text-sm text-black font-bold leading-tight">
-                    J'accepte les conditions et la politique de confidentialité
+                    J&apos;accepte les conditions et la politique de
+                    confidentialité
                   </span>
                 </label>
               </div>
@@ -337,7 +338,7 @@ export default function CreateProfilePage() {
                     Création en cours...
                   </>
                 ) : (
-                  "C'est parti"
+                  "C&apos;est parti"
                 )}
               </button>
             </form>
@@ -361,7 +362,7 @@ export default function CreateProfilePage() {
                   href="/terms"
                   className="text-black hover:text-black transition-colors"
                 >
-                  Conditions d'utilisation
+                  Conditions d&apos;utilisation
                 </Link>
               </div>
             </div>

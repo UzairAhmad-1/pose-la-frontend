@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { Button } from "./Button";
 
 export const HeroSection: React.FC = () => {
@@ -14,13 +15,14 @@ export const HeroSection: React.FC = () => {
       <div className="bg-[#DDE0E8] rounded-2xl p-6 sm:p-8 w-full max-w-md sm:max-w-xl space-y-5">
         {/* Subtitle */}
         <h2 className="text-base sm:text-lg font-semibold text-black">
-          SOYA, l'intelligence qui comprend tes émotions
+          SOYA, l&apos;intelligence qui comprend tes émotions
         </h2>
 
         {/* Narrative Text */}
         <p className="text-black text-sm sm:text-base leading-relaxed">
-          Tu n'as pas à porter ce fardeau en silence. Les mots jamais prononcés,
-          les émotions qui t'écrasent, tout cela peut trouver sa place ici.
+          Tu n&apos;as pas à porter ce fardeau en silence. Les mots jamais
+          prononcés, les émotions qui t&apos;écrasent, tout cela peut trouver sa
+          place ici.
         </p>
         <p className="text-black text-sm sm:text-base leading-relaxed">
           Chaque émotion renferme une vérité cachée. En les explorant, tu
@@ -40,21 +42,24 @@ export const HeroSection: React.FC = () => {
 
       {/* Footer Links */}
       <div className="pt-6 sm:pt-8 flex flex-wrap justify-center gap-3 sm:gap-6 text-xs sm:text-sm text-gray-600 mt-6">
-        <a href="/help" className="hover:text-black transition-colors">
+        <Link href="/help" className="hover:text-black transition-colors">
           Aide
-        </a>
+        </Link>
         <span className="hidden sm:inline">|</span>
-        <a href="/privacy" className="hover:text-black transition-colors">
+        <Link href="/privacy" className="hover:text-black transition-colors">
           Confidentialité
-        </a>
+        </Link>
         <span className="hidden sm:inline">|</span>
-        <a href="/terms" className="hover:text-black transition-colors">
-          Conditions d'utilisation
-        </a>
+        <Link href="/terms" className="hover:text-black transition-colors">
+          Conditions d&apos;utilisation
+        </Link>
         <span className="hidden sm:inline">|</span>
-        <a href="/legal-notice" className="hover:text-black transition-colors">
-          Mentions légales
-        </a>
+        <Link
+          href="/legal-notice"
+          className="hover:text-black transition-colors"
+        >
+          Mentions l&apos;égales
+        </Link>
       </div>
     </section>
   );

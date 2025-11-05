@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { Toast, ToastType } from "../components/ui/Toast";
 import { userApi } from "../lib/api/user.api";
 
-export default function CheckEmailPage() {
+function CheckEmailContent() {
   const [email, setEmail] = useState("");
   const [isResending, setIsResending] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -57,16 +57,25 @@ export default function CheckEmailPage() {
     try {
       const response = await userApi.verifyToken(storedEmail, storedToken);
 
-      if (response.success && response.data.authToken && response.data.user) {
+      if (response.success && response.data?.authToken && response.data?.user) {
+        const userData = response.data;
+        const authToken = userData.authToken;
+        const user = userData.user;
+
+        if (!authToken || !user) {
+          showToast("Données de réponse invalides", "error");
+          return;
+        }
+
         // Store auth data
-        localStorage.setItem("authToken", response.data.authToken);
-        localStorage.setItem("user", JSON.stringify(response.data.user));
+        localStorage.setItem("authToken", authToken);
+        localStorage.setItem("user", JSON.stringify(user));
 
         showToast("Email vérifié avec succès !", "success");
 
         // Redirect based on onboarding status
         setTimeout(() => {
-          if (response.data.user?.isOnboardingComplete) {
+          if (user.isOnboardingComplete) {
             window.location.href = "/home";
           } else {
             window.location.href = "/create-profile";
@@ -98,11 +107,11 @@ export default function CheckEmailPage() {
     try {
       const response = await userApi.signInWithEmail(storedEmail);
 
-      if (response.success) {
+      if (response.success && response.data?.verificationToken) {
         // Update stored token
         sessionStorage.setItem(
           "verificationToken",
-          response.data.verificationToken!
+          response.data.verificationToken
         );
         showToast(
           "Un nouvel email vient d'être envoyé à votre adresse.",
@@ -174,5 +183,26 @@ export default function CheckEmailPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function CheckEmailPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-[#f4f6fc] flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+          <div className="sm:mx-auto sm:w-full sm:max-w-md">
+            <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+              <div className="bg-white py-8 px-6 shadow sm:rounded-lg text-center">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-black mx-auto"></div>
+                <p className="mt-4 text-gray-600">Chargement...</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+    >
+      <CheckEmailContent />
+    </Suspense>
   );
 }

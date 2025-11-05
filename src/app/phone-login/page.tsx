@@ -68,15 +68,16 @@ export default function PhoneLoginPage() {
         setStep("otp");
         startCountdown();
 
-        if (process.env.NODE_ENV === "development" && response.data.otp) {
+        if (process.env.NODE_ENV === "development" && response.data?.otp) {
           setOtp(response.data.otp);
         }
       }
-    } catch (error: any) {
-      showToast(
-        error.response?.data?.message || "Erreur lors de l'envoi du code",
-        "error"
-      );
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Erreur lors de l'envoi du code";
+      showToast(message, "error");
     } finally {
       setIsLoading(false);
     }
@@ -94,29 +95,31 @@ export default function PhoneLoginPage() {
     try {
       const response = await userApi.verifyPhoneOTP(phone, otp);
 
-      if (response.success) {
+      if (response.success && response.data) {
+        const userData = response.data;
         showToast(
-          response.data.isNewUser
+          userData.isNewUser
             ? "Compte créé avec succès!"
             : "Connexion réussie!",
           "success"
         );
 
-        localStorage.setItem("authToken", response.data.token);
+        localStorage.setItem("authToken", userData.token);
 
         setTimeout(() => {
-          if (response.data.needsOnboarding) {
+          if (userData.needsOnboarding) {
             router.push("/create-profile");
           } else {
             router.push("/home");
           }
         }, 1000);
       }
-    } catch (error: any) {
-      showToast(
-        error.response?.data?.message || "Code invalide. Veuillez réessayer.",
-        "error"
-      );
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Code invalide. Veuillez réessayer.";
+      showToast(message, "error");
     } finally {
       setIsLoading(false);
     }
@@ -132,11 +135,12 @@ export default function PhoneLoginPage() {
         showToast("Nouveau code envoyé", "success");
         startCountdown();
       }
-    } catch (error: any) {
-      showToast(
-        error.response?.data?.message || "Erreur lors de l'envoi du code",
-        "error"
-      );
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Erreur lors de l'envoi du code";
+      showToast(message, "error");
     } finally {
       setIsLoading(false);
     }

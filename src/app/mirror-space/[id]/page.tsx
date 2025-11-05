@@ -1,21 +1,29 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams, useParams } from "next/navigation";
 import { ArrowLeft, MessageCircle, Info } from "lucide-react";
+import { useEffect, useState } from "react";
 import Navbar from "../../components/layout/Navbar";
-import Image from "next/image";
 import { mirrorCards, allCards } from "../../lib/cardData";
 
-export default function MirrorSpacePage({
-  params,
-}: {
-  params: { id: string };
-}) {
+export default function MirrorSpacePage() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const params = useParams();
   const sourceCardId = searchParams.get("source");
 
-  const cardId = parseInt(params.id);
+  const [cardId, setCardId] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (params?.id && typeof params.id === "string") {
+      setCardId(parseInt(params.id));
+    }
+  }, [params]);
+
+  if (cardId === null) {
+    return null; // or a loading state
+  }
+
   const card = mirrorCards.find((c) => c.id === cardId);
   const sourceCard = allCards.find(
     (c) => c.id === parseInt(sourceCardId || "")
@@ -64,8 +72,8 @@ export default function MirrorSpacePage({
               </h3>
               <p className="text-blue-800 text-sm leading-relaxed">
                 {sourceCard
-                  ? `Tu explores la version masculine de "${sourceCard.title}". Cette carte t'aide à comprendre le point de vue émotionnel de l'autre, sans jugement.`
-                  : "Tu explores une carte du parcours masculin pour comprendre l'expérience émotionnelle de l'autre."}
+                  ? `Tu explores la version masculine de "${sourceCard.title}". Cette carte t&apos;aide à comprendre le point de vue émotionnel de l&apos;autre, sans jugement.`
+                  : "Tu explores une carte du parcours masculin pour comprendre l&apos;expérience émotionnelle de l&apos;autre."}
               </p>
             </div>
           </div>

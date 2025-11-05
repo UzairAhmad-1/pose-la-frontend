@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronRight, User } from "lucide-react";
+import { User } from "lucide-react";
 
 interface Account {
   id: string;
@@ -11,7 +11,7 @@ interface Account {
 }
 
 export default function AccountSelectionPage() {
-  const [selectedAccount, setSelectedAccount] = useState<string | null>(null);
+  // const [selectedAccount, setSelectedAccount] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [language, setLanguage] = useState("en-US");
 
@@ -31,7 +31,7 @@ export default function AccountSelectionPage() {
   ];
 
   const handleAccountSelect = (accountId: string) => {
-    setSelectedAccount(accountId);
+    // setSelectedAccount(accountId);
     setIsLoading(true);
 
     // Simulate login process

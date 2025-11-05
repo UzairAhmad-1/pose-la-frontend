@@ -1,12 +1,12 @@
 // app/subscriptions/gift/page.tsx
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { Gift, Heart } from "lucide-react";
 import GiftCodeGenerator from "../../components/layout/GiftCodeGenerator";
 
-export default function GiftSubscriptionPage() {
+function GiftSubscriptionContent() {
   const [formData, setFormData] = useState({
     recipientName: "",
     recipientEmail: "",
@@ -72,9 +72,9 @@ export default function GiftSubscriptionPage() {
             Offrir POSE-LÀ à un proche
           </h1>
           <p className="text-black text-lg leading-relaxed max-w-3xl mx-auto">
-            Parfois, le plus beau cadeau qu'on puisse offrir, c'est du temps
-            pour soi. Un espace où déposer ses pensées, comprendre ses émotions,
-            et avancer à son rythme.
+            Parfois, le plus beau cadeau qu&apos;on puisse offrir, c&apos;est du
+            temps pour soi. Un espace où déposer ses pensées, comprendre ses
+            émotions, et avancer à son rythme.
           </p>
         </div>
 
@@ -91,8 +91,8 @@ export default function GiftSubscriptionPage() {
                   <p>
                     • Choisis la personne que tu souhaites offrir ce cadeau,
                     personnalise son message : écris-lui quelques mots sincères
-                    : par exemple, "je t'offre ce moment, prendre ce temps pour
-                    toi".
+                    : par exemple, &quot;je t&apos;offre ce moment, prendre ce
+                    temps pour toi&quot;.
                   </p>
                   <p>
                     • Offre instantanée : ton cadeau est activable
@@ -178,7 +178,7 @@ export default function GiftSubscriptionPage() {
                 {/* Duration */}
                 <div>
                   <label className="block text-sm font-medium text-black mb-2">
-                    Durée de l'abonnement
+                    Durée de l&apos;abonnement
                   </label>
                   <div className="grid grid-cols-2 gap-4">
                     <label className="flex items-center p-4 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-50">
@@ -264,17 +264,20 @@ export default function GiftSubscriptionPage() {
             {/* Experience Description */}
             <div className="bg-white rounded-2xl shadow-lg p-6">
               <h3 className="font-semibold text-black mb-3">
-                L'expérience qu'elle va recevoir :
+                L&apos;expérience qu&apos;elle va recevoir :
               </h3>
               <ul className="text-black text-sm space-y-2">
                 <li>
-                  • Un email d'accueil chaleureux l'attend : "Quelqu'un pense à
-                  toi."
+                  • Un email d&apos;accueil chaleureux l&apos;attend :
+                  &quot;Quelqu&apos;un pense à toi.&quot;
                 </li>
                 <li>• Un espace personnel où ses mots trouvent leur place</li>
-                <li>• SOYA l'accompagne avec bienveillance, sans jugement</li>
                 <li>
-                  • Aucune contrainte : pas de carte bancaire, pas d'engagement
+                  • SOYA l&apos;accompagne avec bienveillance, sans jugement
+                </li>
+                <li>
+                  • Aucune contrainte : pas de carte bancaire, pas
+                  d&apos;engagement
                 </li>
                 <li>• Juste un espace de liberté émotionnelle</li>
               </ul>
@@ -286,5 +289,19 @@ export default function GiftSubscriptionPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function GiftSubscriptionPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-[#f4f6fc] py-8 px-4 sm:py-12 sm:px-6 lg:px-8 flex items-center justify-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-black"></div>
+        </div>
+      }
+    >
+      <GiftSubscriptionContent />
+    </Suspense>
   );
 }

@@ -205,8 +205,8 @@ export const CookieBanner: React.FC = () => {
               <p className="text-gray-700 text-sm">
                 Nous utilisons des cookies pour améliorer votre expérience sur
                 POSE-LÀ. Les cookies essentiels sont nécessaires au
-                fonctionnement de l'application. Vous pouvez personnaliser vos
-                préférences à tout moment.
+                fonctionnement de l&apos;application. Vous pouvez personnaliser
+                vos préférences à tout moment.
               </p>
             </div>
 
@@ -253,7 +253,7 @@ export const CookieBanner: React.FC = () => {
                         Cookies essentiels
                       </h4>
                       <p className="text-sm text-gray-600 mt-1">
-                        Nécessaires au fonctionnement de l'application
+                        Nécessaires au fonctionnement de l&apos;application
                         (authentification, sécurité, préférences de langue). Ces
                         cookies ne peuvent pas être désactivés.
                       </p>
@@ -276,12 +276,12 @@ export const CookieBanner: React.FC = () => {
                   <div className="flex items-center justify-between">
                     <div className="flex-1">
                       <h4 className="font-semibold text-black">
-                        Cookies d'analyse
+                        Cookies d&apos;analyse
                       </h4>
                       <p className="text-sm text-gray-600 mt-1">
                         Nous aident à comprendre comment vous utilisez
-                        l'application pour améliorer nos services. Ces cookies
-                        collectent des données anonymisées.
+                        l&apos;application pour améliorer nos services. Ces
+                        cookies collectent des données anonymisées.
                       </p>
                     </div>
                     <div className="flex items-center ml-4">
@@ -307,7 +307,7 @@ export const CookieBanner: React.FC = () => {
                       <p className="text-sm text-gray-600 mt-1">
                         Mémorisent vos paramètres et choix pour personnaliser
                         votre expérience (langue, thème, paramètres
-                        d'affichage).
+                        d&apos;affichage).
                       </p>
                     </div>
                     <div className="flex items-center ml-4">
@@ -316,7 +316,7 @@ export const CookieBanner: React.FC = () => {
                         type="checkbox"
                         checked={preferences.preferences}
                         onChange={() => handlePreferenceChange("preferences")}
-                        title="Autoriser les cookies de préférences"
+                        title="Autoriser les cookies de préférences'"
                         className="h-4 w-4 text-black border-gray-300 rounded focus:ring-black cursor-pointer"
                       />
                     </div>
@@ -337,7 +337,7 @@ export const CookieBanner: React.FC = () => {
                       : "❌ Désactivés"}
                   </div>
                   <div>
-                    • Cookies d'analyse:{" "}
+                    • Cookies d&apos;analyse:{" "}
                     {getCookie("google_analytics")
                       ? "✅ Activés"
                       : "❌ Désactivés"}

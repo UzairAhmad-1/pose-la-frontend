@@ -12,6 +12,7 @@ import {
   Pause,
 } from "lucide-react";
 import { useAuth } from "../../contexts/AuthContext";
+import Link from "next/link";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -81,35 +82,35 @@ export default function Navbar() {
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <a href="/" className="flex items-center space-x-2 flex-shrink-0">
+          <Link href="/" className="flex items-center space-x-2 flex-shrink-0">
             <div className="bg-black rounded-full p-1.5">
               <Pause className="h-4 w-4 text-white" />
             </div>
             <span className="text-xl font-semibold text-black whitespace-nowrap">
               POSE-LÀ
             </span>
-          </a>
+          </Link>
 
           {/* Desktop Navigation Links */}
           <div className="hidden lg:flex items-center space-x-1 ml-8">
-            <a
+            <Link
               href="/chat"
               className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-black hover:bg-gray-50 rounded-md transition-colors whitespace-nowrap"
             >
               DISCUTER AVEC SOYA
-            </a>
-            <a
+            </Link>
+            <Link
               href="/subscriptions"
               className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-black hover:bg-gray-50 rounded-md transition-colors whitespace-nowrap"
             >
               OFFRIR POSE-LÀ
-            </a>
-            <a
+            </Link>
+            <Link
               href="/spaces"
               className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-black hover:bg-gray-50 rounded-md transition-colors whitespace-nowrap"
             >
               EXPLORER LES ESPACES
-            </a>
+            </Link>
           </div>
 
           {/* Right Side: Search + Promotional Badge + Profile */}
@@ -135,7 +136,7 @@ export default function Navbar() {
 
             {/* Promotional Badge */}
             {isTrialActive && (
-              <a
+              <Link
                 href="/subscriptions"
                 className="bg-gradient-to-r from-orange-500 to-red-500 text-white px-3 py-1.5 rounded-full text-xs font-medium hover:from-orange-600 hover:to-red-600 transition-all duration-200 transform hover:scale-105 shadow-sm whitespace-nowrap"
               >
@@ -155,7 +156,7 @@ export default function Navbar() {
                     left — enjoy it!
                   </span>
                 )}
-              </a>
+              </Link>
             )}
 
             {/* Profile Dropdown */}
@@ -278,7 +279,7 @@ export default function Navbar() {
               {/* Promotional Badge - Mobile */}
               {isTrialActive && (
                 <div className="mb-4 px-4">
-                  <a
+                  <Link
                     href="/subscriptions"
                     className="bg-gradient-to-r from-orange-500 to-red-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:from-orange-600 hover:to-red-600 transition-all duration-200 block text-center"
                     onClick={() => setIsMenuOpen(false)}
@@ -299,21 +300,21 @@ export default function Navbar() {
                         {timeLeft.minutes !== 1 ? "s" : ""} left — enjoy it!
                       </span>
                     )}
-                  </a>
+                  </Link>
                 </div>
               )}
 
               {/* Mobile Navigation Links */}
               <div className="space-y-1 mb-4 px-2">
-                <a
+                <Link
                   href="/chat"
                   className="flex items-center space-x-3 py-3 px-2 text-gray-700 hover:text-black hover:bg-gray-50 rounded-md font-medium transition-colors"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   <MessageCircle className="h-5 w-5" />
                   <span>DISCUTER AVEC SOYA</span>
-                </a>
-                <a
+                </Link>
+                <Link
                   href="/subscriptions"
                   className="flex items-center space-x-3 py-3 px-2 text-gray-700 hover:text-black hover:bg-gray-50 rounded-md font-medium transition-colors"
                   onClick={() => setIsMenuOpen(false)}
@@ -322,15 +323,15 @@ export default function Navbar() {
                     🎁
                   </span>
                   <span>OFFRIR POSE-LÀ</span>
-                </a>
-                <a
+                </Link>
+                <Link
                   href="/spaces"
                   className="flex items-center space-x-3 py-3 px-2 text-gray-700 hover:text-black hover:bg-gray-50 rounded-md font-medium transition-colors"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   <Compass className="h-5 w-5" />
                   <span>EXPLORER LES ESPACES</span>
-                </a>
+                </Link>
               </div>
 
               {/* Mobile Auth Actions */}

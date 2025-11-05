@@ -13,13 +13,10 @@ import {
   MoreVertical,
   Send,
   Paperclip,
-  Mic,
-  Smile,
   ThumbsUp,
   ThumbsDown,
   Download,
   Shield,
-  Bell,
   Settings,
   User,
   ArrowUp,
@@ -27,40 +24,24 @@ import {
   Eye,
   GitMerge,
   Ghost,
-  Heart,
-  Brain,
   Scan,
   Zap,
   Languages,
   Building,
   Users,
-  Calendar,
-  Cloud,
-  Mail,
   LogOut,
-  Trash2,
-  Archive,
-  EyeOff,
-  Volume2,
-  Play,
   Pause,
   HelpCircle,
-  Star,
-  Bug,
-  Gift,
   ShieldCheck,
   Globe,
   Moon,
   Sun,
   MessageCircle,
-  Home,
   Search,
   Filter,
   Grid,
   List,
   X,
-  Check,
-  Clock,
   HistoryIcon,
 } from "lucide-react";
 
@@ -109,7 +90,6 @@ export default function ChatPage() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const [isRecording, setIsRecording] = useState(false);
-  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   // Sample data
   const thematicGroups = [
@@ -126,7 +106,7 @@ export default function ChatPage() {
       id: "1",
       title: "Je ne veux plus mendier pour exister",
       pitch:
-        "Tu en as assez de devoir chercher à exister aux yeux des autres. Tu t’oublies en croyant devoir prouver ta valeur pour être aimé.",
+        "Tu en as assez de devoir chercher à exister aux yeux des autres. Tu t&apos;oublies en croyant devoir prouver ta valeur pour être aimé.",
       type: "mirror",
       sensitiveMode: true,
       group: "wounds",
@@ -144,7 +124,7 @@ export default function ChatPage() {
       id: "3",
       title: "Briser les schémas hérités",
       pitch:
-        "Comprendre comment l’héritage familial influence tes relations actuelles et tes réactions émotionnelles.",
+        "Comprendre comment l&apos;héritage familial influence tes relations actuelles et tes réactions émotionnelles.",
       type: "bridge",
       sensitiveMode: true,
       group: "family",
@@ -262,29 +242,17 @@ export default function ChatPage() {
     e.target.value = "";
   };
 
-  // Emoji handlers
-  const handleEmojiClick = () => {
-    setShowEmojiPicker(!showEmojiPicker);
-  };
-
-  const handleEmojiSelect = (emojiData: any) => {
-    setInputMessage((prev) => prev + emojiData.emoji);
-    setShowEmojiPicker(false);
-  };
-
   // Close emoji picker when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (showEmojiPicker) {
-        setShowEmojiPicker(false);
-      }
+      //
     };
 
     document.addEventListener("click", handleClickOutside);
     return () => {
       document.removeEventListener("click", handleClickOutside);
     };
-  }, [showEmojiPicker]);
+  }, []);
 
   // Render different views based on current state
   const renderCurrentView = () => {
@@ -480,25 +448,6 @@ export default function ChatPage() {
                     </button>
                   </div>
                 </div>
-
-                {/* Emoji Button */}
-                <button
-                  title="Emoji"
-                  onClick={handleEmojiClick}
-                  className="p-3 bg-gray-100 hover:bg-gray-200 rounded-2xl transition-colors duration-200 relative"
-                >
-                  <Smile className="h-5 w-5 text-gray-600" />
-                  {/* Emoji Picker */}
-                  {showEmojiPicker && (
-                    <div className="absolute bottom-full right-0 mb-2 z-10">
-                      <EmojiPicker
-                        onEmojiClick={handleEmojiSelect}
-                        width={300}
-                        height={400}
-                      />
-                    </div>
-                  )}
-                </button>
               </div>
             </div>
           </div>
@@ -552,7 +501,7 @@ function SpacesView({
             </div>
             <div className="p-6">
               <h3 className="text-xl font-bold text-gray-900 mb-3">
-                Women's Space
+                Women&apos;s Space
               </h3>
               <p className="text-gray-600 mb-4">
                 Explore emotions and relationships from a feminine perspective
@@ -574,7 +523,7 @@ function SpacesView({
             </div>
             <div className="p-6">
               <h3 className="text-xl font-bold text-gray-900 mb-3">
-                Men's Space
+                Men&apos;s Space
               </h3>
               <p className="text-gray-600 mb-4">
                 Navigate emotional landscapes from a masculine perspective
@@ -618,7 +567,7 @@ function SpacesView({
             </div>
             <div className="p-6">
               <h3 className="text-xl font-bold text-gray-900 mb-3">
-                I'm Rebuilding Myself
+                I&apos;m Rebuilding Myself
               </h3>
               <p className="text-gray-600 mb-4">
                 Healing and reconstruction journey
@@ -722,7 +671,7 @@ function GroupsView({
   onGroupSelect,
   onBack,
 }: {
-  groups: any[];
+  groups: { id: string; name: string; count: number }[];
   onGroupSelect: (group: string) => void;
   onBack: () => void;
 }) {
@@ -1056,7 +1005,7 @@ function SensitiveWarningView({
             onClick={onAccess}
             className="flex-1 py-3 px-6 bg-rose-600 text-white rounded-lg hover:bg-rose-700 transition-colors duration-200 font-medium"
           >
-            I'm Ready - Access
+            I&apos;m Ready - Access
           </button>
         </div>
 
@@ -1075,8 +1024,8 @@ function ProfileSettingsModal({
   onTabChange,
 }: {
   onClose: () => void;
-  activeTab: string;
-  onTabChange: (tab: any) => void;
+  activeTab: "account" | "privacy" | "app" | "support";
+  onTabChange: (tab: "account" | "privacy" | "app" | "support") => void;
 }) {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
@@ -1106,7 +1055,11 @@ function ProfileSettingsModal({
                   <button
                     title="button"
                     key={item.id}
-                    onClick={() => onTabChange(item.id)}
+                    onClick={() =>
+                      onTabChange(
+                        item.id as "account" | "privacy" | "app" | "support"
+                      )
+                    }
                     className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors duration-200 ${
                       activeTab === item.id
                         ? "bg-blue-100 text-blue-700"
@@ -1409,8 +1362,8 @@ function SupportSettings() {
           Contact Support
         </h3>
         <p className="text-gray-600 mb-4">
-          Your message will be read with care. We'll get back to you as soon as
-          possible, with kindness.
+          Your message will be read with care. We&apos;ll get back to you as
+          soon as possible, with kindness.
         </p>
         <button
           title="button"

@@ -25,9 +25,9 @@ export default function RebuildingMyself() {
     {
       id: 1,
       title: "Reconnaître mes ruines",
-      text: "Accepter l'effondrement est ton premier acte de courage.",
+      text: "Accepter l&apos;effondrement est ton premier acte de courage.",
       narrative:
-        "Tout s'effondre. Tu regardes les décombres et tu aimerais fermer les yeux. Mais reconnaître tes ruines n'est pas une faiblesse — c'est du courage. C'est dire : Oui, tout se brise... mais je suis encore là.",
+        "Tout s&apos;effondre. Tu regardes les décombres et tu aimerais fermer les yeux. Mais reconnaître tes ruines n&apos;est pas une faiblesse — c&apos;est du courage. C&apos;est dire : Oui, tout se brise... mais je suis encore là.",
       isUnlocked: true,
       isCompleted: false,
     },
@@ -36,16 +36,16 @@ export default function RebuildingMyself() {
       title: "Rassembler mes morceaux",
       text: "Même brisé, tu portes encore des forces prêtes à renaître.",
       narrative:
-        "Tu te sens vide, convaincu qu'il ne reste plus rien en toi. Et pourtant, dans les fissures, certaines parties demeurent solides. Ramasser ces fragments, c'est reconnaître que ta valeur n'a pas disparu. C'est le début de la reconstruction d'une base — fragile peut-être, mais réelle — sur laquelle renaître.",
+        "Tu te sens vide, convaincu qu&apos;il ne reste plus rien en toi. Et pourtant, dans les fissures, certaines parties demeurent solides. Ramasser ces fragments, c&apos;est reconnaître que ta valeur n&apos;a pas disparu. C&apos;est le début de la reconstruction d&apos;une base — fragile peut-être, mais réelle — sur laquelle renaître.",
       isUnlocked: false,
       isCompleted: false,
     },
     {
       id: 3,
       title: "Reconstruire ma confiance",
-      text: "Ta valeur ne s'est pas effondrée — elle attend d'être retrouvée.",
+      text: "Ta valeur ne s&apos;est pas effondrée — elle attend d&apos;être retrouvée.",
       narrative:
-        "La confiance peut se fissurer, mais elle ne disparaît jamais. Elle attend que tu la relèves, pierre par pierre, à ton propre rythme. Reconstruire ta confiance, c'est te rappeler que tes épreuves ne te définissent pas. C'est t'accorder la permission d'avancer avec dignité et force.",
+        "La confiance peut se fissurer, mais elle ne disparaît jamais. Elle attend que tu la relèves, pierre par pierre, à ton propre rythme. Reconstruire ta confiance, c&apos;est te rappeler que tes épreuves ne te définissent pas. C&apos;est t&apos;accorder la permission d&apos;avancer avec dignité et force.",
       isUnlocked: false,
       isCompleted: false,
     },
@@ -54,16 +54,16 @@ export default function RebuildingMyself() {
       title: "Transformer ma douleur en force",
       text: "Ta douleur peut devenir le carburant de ta renaissance.",
       narrative:
-        "La douleur peut rester un poids — ou se transformer en nouvelle énergie. Elle peut t'enfermer, ou te pousser à créer quelque chose de différent. La transformer ne veut pas dire l'effacer — mais lui donner un sens. C'est en faire une force motrice, une source de résilience et de renouveau.",
+        "La douleur peut rester un poids — ou se transformer en nouvelle énergie. Elle peut t&apos;enfermer, ou te pousser à créer quelque chose de différent. La transformer ne veut pas dire l&apos;effacer — mais lui donner un sens. C&apos;est en faire une force motrice, une source de résilience et de renouveau.",
       isUnlocked: false,
       isCompleted: false,
     },
     {
       id: 5,
       title: "Un nouveau départ",
-      text: "Le passé reste écrit — mais demain t'appartient.",
+      text: "Le passé reste écrit — mais demain t&apos;appartient.",
       narrative:
-        "Tu portes encore tes cicatrices, mais elles ne dictent plus ton histoire. Chaque fin ouvre la possibilité d'un nouveau commencement. Un nouveau départ ne nie pas ce que tu as vécu — il s'appuie dessus. C'est t'autoriser à croire que demain peut être plus doux, et différent.",
+        "Tu portes encore tes cicatrices, mais elles ne dictent plus ton histoire. Chaque fin ouvre la possibilité d&apos;un nouveau commencement. Un nouveau départ ne nie pas ce que tu as vécu — il s&apos;appuie dessus. C&apos;est t&apos;autoriser à croire que demain peut être plus doux, et différent.",
       isUnlocked: false,
       isCompleted: false,
     },
@@ -220,7 +220,7 @@ export default function RebuildingMyself() {
 
           <h1 className="text-3xl font-bold mb-4">Je me reconstruis</h1>
           <p className="text-lg text-gray-700 mb-6">
-            Un voyage progressif en 5 étapes, de l'effondrement à la
+            Un voyage progressif en 5 étapes, de l&apos;effondrement à la
             renaissance. Chaque carte ouverte est un pas vers ton nouveau
             commencement.
           </p>
@@ -278,7 +278,9 @@ export default function RebuildingMyself() {
               <h3 className="text-xl font-bold mb-3">{step.title}</h3>
 
               {/* Step Text */}
-              <p className="text-gray-700 mb-4 italic">"{step.text}"</p>
+              <p className="text-gray-700 mb-4 italic">
+                &quot;{step.text}&quot;
+              </p>
 
               {/* Status */}
               <div className="text-sm flex items-center gap-1">
@@ -297,7 +299,7 @@ export default function RebuildingMyself() {
                   <>
                     <FaLock className="text-gray-500 text-xs" />
                     <span className="text-gray-500">
-                      Débloque après l'étape {step.id - 1}
+                      Débloque après l&apos;étape {step.id - 1}
                     </span>
                   </>
                 )}
@@ -319,7 +321,7 @@ export default function RebuildingMyself() {
             </h3>
             <p className="text-green-700 mb-6 text-lg">
               Tu as complété ton voyage de reconstruction. Souviens-toi que
-              chaque fin n'est que le début de quelque chose de nouveau.
+              chaque fin n&apos;est que le début de quelque chose de nouveau.
             </p>
             <button
               onClick={handleResetClick}
@@ -368,7 +370,7 @@ export default function RebuildingMyself() {
             <div className="p-6">
               {/* Step Text */}
               <blockquote className="text-xl italic text-gray-700 mb-8 p-4 bg-gray-50 rounded-lg border-l-4 border-[#8c52ff]">
-                "{selectedStep.text}"
+                &quot;{selectedStep.text}&quot;
               </blockquote>
 
               {/* Narrative */}
@@ -386,7 +388,7 @@ export default function RebuildingMyself() {
                 </h4>
                 <p className="text-blue-700 mb-4">
                   Comment cette étape résonne-t-elle avec ton expérience
-                  actuelle ? Qu'est-ce que ces mots éveillent en toi ?
+                  actuelle ? Qu&apos;est-ce que ces mots éveillent en toi ?
                 </p>
                 <textarea
                   placeholder="Partage tes réflexions, tes émotions, tes questions..."

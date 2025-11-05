@@ -5,7 +5,7 @@ import { useRouter, useParams } from "next/navigation";
 import { ArrowLeft, MessageCircle, Heart, AlertTriangle } from "lucide-react";
 import Navbar from "../../components/layout/Navbar";
 import Image from "next/image";
-import { allCards, getMirrorCard, mirrorCards } from "../../lib/cardData";
+import { allCards, getMirrorCard } from "../../lib/cardData";
 
 export default function CardDetailPage() {
   const router = useRouter();
@@ -13,7 +13,9 @@ export default function CardDetailPage() {
   const cardId = parseInt(params.id as string);
 
   const [message, setMessage] = useState("");
-  const [activeModal, setActiveModal] = useState(null); // 'mirror', 'bridge'
+  const [activeModal, setActiveModal] = useState<"mirror" | "bridge" | null>(
+    null
+  );
   const [sensitiveMode, setSensitiveMode] = useState(false);
 
   const card = allCards.find((c) => c.id === cardId);
@@ -31,7 +33,7 @@ export default function CardDetailPage() {
             onClick={() => router.push("/women-space")}
             className="text-pink-600 hover:text-pink-700 font-semibold"
           >
-            ← Retour à l'espace Femme
+            ← Retour à l&apos;espace Femme
           </button>
         </div>
       </div>
@@ -56,7 +58,7 @@ export default function CardDetailPage() {
     }
   };
 
-  const handleBridgeAccess = (target) => {
+  const handleBridgeAccess = (target: "crossed-language" | "mirror") => {
     setActiveModal(null);
     switch (target) {
       case "crossed-language":
@@ -87,10 +89,13 @@ export default function CardDetailPage() {
             <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <MessageCircle className="w-6 h-6 text-blue-500" />
             </div>
-            <h3 className="text-lg font-bold mb-3 text-gray-900">Changer de perspective</h3>
+            <h3 className="text-lg font-bold mb-3 text-gray-900">
+              Changer de perspective
+            </h3>
             <p className="text-sm text-gray-600 mb-6 leading-relaxed">
-              Vous allez découvrir comment l'autre personne pourrait vivre cette situation. 
-              Ce n'est pas pour vous identifier, mais pour comprendre son univers émotionnel.
+              Vous allez découvrir comment l&apos;autre personne pourrait vivre
+              cette situation. Ce n&apos;est pas pour vous identifier, mais pour
+              comprendre son univers émotionnel.
             </p>
             <div className="flex gap-3">
               <button
@@ -117,9 +122,12 @@ export default function CardDetailPage() {
             <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <MessageCircle className="w-6 h-6 text-green-500" />
             </div>
-            <h3 className="text-lg font-bold mb-3 text-gray-900">Carte Passerelle</h3>
+            <h3 className="text-lg font-bold mb-3 text-gray-900">
+              Carte Passerelle
+            </h3>
             <p className="text-sm text-gray-600 mb-4 leading-relaxed">
-              Cette carte vous invite à explorer d'autres dimensions émotionnelles.
+              Cette carte vous invite à explorer d&apos;autres dimensions
+              émotionnelles.
             </p>
             <div className="space-y-2">
               <button
@@ -152,7 +160,7 @@ export default function CardDetailPage() {
           className="flex items-center gap-2 text-gray-600 hover:text-pink-600 transition-colors mb-6 font-medium"
         >
           <ArrowLeft className="w-5 h-5" />
-          Retour à l'espace Femme
+          Retour à l&apos;espace Femme
         </button>
 
         {/* Sensitive Mode Warning */}
@@ -167,8 +175,10 @@ export default function CardDetailPage() {
                   Contenu sensible
                 </h3>
                 <p className="text-orange-700 text-sm mb-4">
-                  Cette carte explore des thèmes sensibles qui pourraient réveiller des émotions intenses. 
-                  Nous te recommandons d'activer le mode sensible pour une expérience plus douce.
+                  Cette carte explore des thèmes sensibles qui pourraient
+                  réveiller des émotions intenses. Nous te recommandons
+                  d&apos;activer le mode sensible pour une expérience plus
+                  douce.
                 </p>
                 <button
                   onClick={handleActivateSensitiveMode}
@@ -243,7 +253,10 @@ export default function CardDetailPage() {
             </h2>
             <div className="space-y-3">
               {card.examples.map((example, index) => (
-                <div key={index} className="bg-pink-50 rounded-xl p-4 text-gray-700">
+                <div
+                  key={index}
+                  className="bg-pink-50 rounded-xl p-4 text-gray-700"
+                >
                   {example}
                 </div>
               ))}
@@ -255,7 +268,7 @@ export default function CardDetailPage() {
         {card.emotionalFocus && card.emotionalFocus.length > 0 && (
           <div className="bg-white rounded-3xl p-8 shadow-sm border border-pink-100 mb-6">
             <h2 className="text-xl font-bold text-gray-900 mb-6">
-              Ce que SOYA t'aide à explorer ici
+              Ce que SOYA t&apos;aide à explorer ici
             </h2>
             <div className="space-y-3">
               {card.emotionalFocus.map((focus, index) => (
@@ -281,7 +294,7 @@ export default function CardDetailPage() {
                 Discuter avec SOYA
               </h2>
               <p className="text-sm text-gray-600 mt-1">
-                Partage ce que tu ressens, SOYA est là pour t'écouter
+                Partage ce que tu ressens, SOYA est là pour t&apos;écouter
               </p>
             </div>
           </div>
@@ -305,7 +318,7 @@ export default function CardDetailPage() {
           {(card.hasPasserelle || card.hasMirror) && (
             <div className="mt-8 border-t pt-6">
               <h3 className="text-sm font-semibold text-gray-600 mb-4 text-center">
-                Explorer d'autres perspectives
+                Explorer d&apos;autres perspectives
               </h3>
               <div className="space-y-3">
                 {card.hasMirror && mirrorCard && (
@@ -313,28 +326,54 @@ export default function CardDetailPage() {
                     onClick={() => setActiveModal("mirror")}
                     className="w-full bg-blue-50 text-blue-700 px-6 py-4 rounded-xl hover:bg-blue-100 transition-colors font-semibold border border-blue-200 flex items-center justify-center gap-3"
                   >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 5a1 1 0 011-1h4a1 1 0 011 1v7a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v7a1 1 0 01-1 1h-4a1 1 0 01-1-1V5z" />
+                    <svg
+                      className="w-5 h-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M4 5a1 1 0 011-1h4a1 1 0 011 1v7a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v7a1 1 0 01-1 1h-4a1 1 0 01-1-1V5z"
+                      />
                     </svg>
                     <div className="text-left">
-                      <div className="font-semibold">Changer de perspective</div>
-                      <div className="text-sm text-blue-600">Voir comment il pourrait le vivre</div>
+                      <div className="font-semibold">
+                        Changer de perspective
+                      </div>
+                      <div className="text-sm text-blue-600">
+                        Voir comment il pourrait le vivre
+                      </div>
                     </div>
                   </button>
                 )}
-                
+
                 {card.hasPasserelle && (
                   <div className="space-y-2">
                     <button
                       onClick={() => setActiveModal("bridge")}
                       className="w-full bg-green-50 text-green-700 px-6 py-4 rounded-xl hover:bg-green-100 transition-colors font-semibold border border-green-200 flex items-center justify-center gap-3"
                     >
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                      <svg
+                        className="w-5 h-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M13 7l5 5m0 0l-5 5m5-5H6"
+                        />
                       </svg>
                       <div className="text-left">
                         <div className="font-semibold">Carte Passerelle</div>
-                        <div className="text-sm text-green-600">Explorer d'autres dimensions émotionnelles</div>
+                        <div className="text-sm text-green-600">
+                          Explorer d&apos;autres dimensions émotionnelles
+                        </div>
                       </div>
                     </button>
                   </div>
@@ -348,7 +387,7 @@ export default function CardDetailPage() {
                     Perspective masculine correspondante:
                   </h4>
                   <p className="text-sm text-blue-700 italic">
-                    "{mirrorCard.title}"
+                    &quot;{mirrorCard.title}&quot;
                   </p>
                 </div>
               )}
@@ -359,14 +398,27 @@ export default function CardDetailPage() {
           {card.isGhost && (
             <div className="mt-6 p-4 bg-purple-50 rounded-xl border border-purple-200">
               <div className="flex items-center gap-2 mb-2">
-                <svg className="w-4 h-4 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                <svg
+                  className="w-4 h-4 text-purple-500"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M13 10V3L4 14h7v7l9-11h-7z"
+                  />
                 </svg>
-                <span className="text-sm font-semibold text-purple-700">Carte Fantôme</span>
+                <span className="text-sm font-semibold text-purple-700">
+                  Carte Fantôme
+                </span>
               </div>
               <p className="text-sm text-purple-600">
-                Cette carte explore les zones d'ombre entre passé et présent. Elle t'invite à revisiter 
-                ce qui hante ton cœur avec douceur, sans rouvrir les blessures.
+                Cette carte explore les zones d&apos;ombre entre passé et
+                présent. Elle t&apos;invite à revisiter ce qui hante ton cœur
+                avec douceur, sans rouvrir les blessures.
               </p>
             </div>
           )}
@@ -376,26 +428,26 @@ export default function CardDetailPage() {
         <div className="mt-8 flex justify-between">
           <button
             onClick={() => {
-              const prevCard = allCards.find(c => c.id === card.id - 1);
+              const prevCard = allCards.find((c) => c.id === card.id - 1);
               if (prevCard) {
                 router.push(`/women-space/${prevCard.id}`);
               }
             }}
-            disabled={!allCards.find(c => c.id === card.id - 1)}
+            disabled={!allCards.find((c) => c.id === card.id - 1)}
             className="flex items-center gap-2 text-gray-600 hover:text-pink-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <ArrowLeft className="w-4 h-4" />
             Carte précédente
           </button>
-          
+
           <button
             onClick={() => {
-              const nextCard = allCards.find(c => c.id === card.id + 1);
+              const nextCard = allCards.find((c) => c.id === card.id + 1);
               if (nextCard) {
                 router.push(`/women-space/${nextCard.id}`);
               }
             }}
-            disabled={!allCards.find(c => c.id === card.id + 1)}
+            disabled={!allCards.find((c) => c.id === card.id + 1)}
             className="flex items-center gap-2 text-gray-600 hover:text-pink-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Carte suivante

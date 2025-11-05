@@ -13,7 +13,9 @@ export default function MenCardDetailPage() {
   const cardId = parseInt(params.id as string);
 
   const [message, setMessage] = useState("");
-  const [activeModal, setActiveModal] = useState(null); // 'mirror', 'bridge'
+  const [activeModal, setActiveModal] = useState<"mirror" | "bridge" | null>(
+    null
+  );
   const [sensitiveMode, setSensitiveMode] = useState(false);
 
   const card = menCards.find((c) => c.id === cardId);
@@ -31,7 +33,7 @@ export default function MenCardDetailPage() {
             onClick={() => router.push("/men")}
             className="text-blue-600 hover:text-blue-700 font-semibold"
           >
-            ← Retour à l'espace Homme
+            ← Retour à l&apos;espace Homme
           </button>
         </div>
       </div>
@@ -56,7 +58,7 @@ export default function MenCardDetailPage() {
     }
   };
 
-  const handleBridgeAccess = (target) => {
+  const handleBridgeAccess = (target: string) => {
     setActiveModal(null);
     switch (target) {
       case "crossed-language":
@@ -91,9 +93,9 @@ export default function MenCardDetailPage() {
               Changer de perspective
             </h3>
             <p className="text-sm text-gray-600 mb-6 leading-relaxed">
-              Vous allez découvrir comment l'autre personne pourrait vivre cette
-              situation. Ce n'est pas pour vous identifier, mais pour comprendre
-              son univers émotionnel.
+              Vous allez découvrir comment l&apos;autre personne pourrait vivre
+              cette situation. Ce n&apos;est pas pour vous identifier, mais pour
+              comprendre son univers émotionnel.
             </p>
             <div className="flex gap-3">
               <button
@@ -124,7 +126,7 @@ export default function MenCardDetailPage() {
               Carte Passerelle
             </h3>
             <p className="text-sm text-gray-600 mb-4 leading-relaxed">
-              Cette carte vous invite à explorer d'autres dimensions
+              Cette carte vous invite à explorer d&apos;autres dimensions
               émotionnelles.
             </p>
             <div className="space-y-2">
@@ -158,7 +160,7 @@ export default function MenCardDetailPage() {
           className="flex items-center gap-2 text-gray-600 hover:text-blue-600 transition-colors mb-6 font-medium"
         >
           <ArrowLeft className="w-5 h-5" />
-          Retour à l'espace Homme
+          Retour à l&apos;espace Homme
         </button>
 
         {/* Sensitive Mode Warning */}
@@ -175,7 +177,8 @@ export default function MenCardDetailPage() {
                 <p className="text-orange-700 text-sm mb-4">
                   Cette carte explore des thèmes sensibles qui pourraient
                   réveiller des émotions intenses. Nous te recommandons
-                  d'activer le mode sensible pour une expérience plus douce.
+                  d&apos;activer le mode sensible pour une expérience plus
+                  douce.
                 </p>
                 <button
                   onClick={handleActivateSensitiveMode}
@@ -265,7 +268,7 @@ export default function MenCardDetailPage() {
         {card.emotionalFocus && card.emotionalFocus.length > 0 && (
           <div className="bg-white rounded-3xl p-8 shadow-sm border border-blue-100 mb-6">
             <h2 className="text-xl font-bold text-gray-900 mb-6">
-              Ce que SOYA t'aide à explorer ici
+              Ce que SOYA t&apos;aide à explorer ici
             </h2>
             <div className="space-y-3">
               {card.emotionalFocus.map((focus, index) => (
@@ -291,7 +294,7 @@ export default function MenCardDetailPage() {
                 Discuter avec SOYA
               </h2>
               <p className="text-sm text-gray-600 mt-1">
-                Partage ce que tu ressens, SOYA est là pour t'écouter
+                Partage ce que tu ressens, SOYA est là pour t&apos;écouter
               </p>
             </div>
           </div>
@@ -299,7 +302,7 @@ export default function MenCardDetailPage() {
           <textarea
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            placeholder={`Par exemple: "SOYA, ${card.title.toLowerCase()}. Aide-moi à comprendre ce que je ressens."`}
+            placeholder={`Par exemple: &quot;SOYA, ${card.title.toLowerCase()}. Aide-moi à comprendre ce que je ressens.&quot;`}
             className="w-full min-h-[120px] p-4 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-gray-900 placeholder-gray-400 mb-4"
           />
 
@@ -315,7 +318,7 @@ export default function MenCardDetailPage() {
           {(card.hasPasserelle || card.hasMirror) && (
             <div className="mt-8 border-t pt-6">
               <h3 className="text-sm font-semibold text-gray-600 mb-4 text-center">
-                Explorer d'autres perspectives
+                Explorer d&apos;autres perspectives
               </h3>
               <div className="space-y-3">
                 {card.hasMirror && mirrorCard && (
@@ -369,7 +372,7 @@ export default function MenCardDetailPage() {
                       <div className="text-left">
                         <div className="font-semibold">Carte Passerelle</div>
                         <div className="text-sm text-green-600">
-                          Explorer d'autres dimensions émotionnelles
+                          Explorer d&apos;autres dimensions émotionnelles
                         </div>
                       </div>
                     </button>
@@ -384,7 +387,7 @@ export default function MenCardDetailPage() {
                     Perspective féminine correspondante:
                   </h4>
                   <p className="text-sm text-blue-700 italic">
-                    "{mirrorCard.title}"
+                    &quot;{mirrorCard.title}&quot;
                   </p>
                 </div>
               )}
@@ -413,9 +416,9 @@ export default function MenCardDetailPage() {
                 </span>
               </div>
               <p className="text-sm text-purple-600">
-                Cette carte explore les zones d'ombre entre passé et présent.
-                Elle t'invite à revisiter ce qui hante ton cœur avec douceur,
-                sans rouvrir les blessures.
+                Cette carte explore les zones d&apos;ombre entre passé et
+                présent. Elle t&apos;invite à revisiter ce qui hante ton cœur
+                avec douceur, sans rouvrir les blessures.
               </p>
             </div>
           )}

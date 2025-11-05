@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import { Heart, Lock, Search, Filter } from "lucide-react";
-import  Navbar  from "../components/layout/Navbar";
+import Navbar from "../components/layout/Navbar";
 import Image from "next/image";
+import { Card } from "../lib/cardData";
 
 // All 65 cards data with images
 const allCards = [
@@ -211,7 +212,7 @@ export default function UniversalSpacePage() {
   const [selectedGroup, setSelectedGroup] = useState("Toutes les cartes");
   const [searchQuery, setSearchQuery] = useState("");
   const [showSensitiveWarning, setShowSensitiveWarning] = useState(false);
-  const [selectedCard, setSelectedCard] = useState<any>(null);
+  const [selectedCard, setSelectedCard] = useState<Card | null>(null);
   const [sensitiveMode, setSensitiveMode] = useState(false);
 
   // Filter cards based on selected group and search query
@@ -228,7 +229,7 @@ export default function UniversalSpacePage() {
     return matchesGroup && matchesSearch && matchesSensitiveMode;
   });
 
-  const handleCardClick = (card: any) => {
+  const handleCardClick = (card: Card) => {
     if (card.sensitive && !sensitiveMode) {
       setSelectedCard(card);
       setShowSensitiveWarning(true);
@@ -290,7 +291,7 @@ export default function UniversalSpacePage() {
           </h1>
           <p className="text-xl text-gray-700 mb-6 max-w-3xl mx-auto leading-relaxed">
             Un accompagnement inclusif pour toutes et tous, explorant les défis,
-            les transitions et les forces communes de l'expérience humaine.
+            les transitions et les forces communes de l&apos;expérience humaine.
             Trouve ici un espace de compréhension profonde au-delà des genres.
           </p>
           <div className="flex items-center justify-center gap-4 text-sm flex-wrap">
@@ -539,9 +540,9 @@ export default function UniversalSpacePage() {
               <p className="text-gray-600 leading-relaxed">
                 Chaque carte a été créée avec soin pour accompagner ton parcours
                 émotionnel, au-delà des genres et des identités. Prends ton
-                temps, explore à ton rythme, et n'hésite pas à revenir sur les
-                cartes qui résonnent particulièrement avec toi. Tu n'es pas
-                seul·e dans ce voyage.
+                temps, explore à ton rythme, et n&apos;hésite pas à revenir sur
+                les cartes qui résonnent particulièrement avec toi. Tu n&apos;es
+                pas seul·e dans ce voyage.
               </p>
             </div>
           </div>
@@ -555,11 +556,12 @@ export default function UniversalSpacePage() {
             <Heart className="w-8 h-8 text-purple-500 fill-purple-500" />
           </div>
           <h3 className="text-2xl font-bold text-gray-900 mb-3">
-            Besoin d'accompagnement ?
+            Besoin d&apos;accompagnement ?
           </h3>
           <p className="text-gray-700 mb-6 max-w-2xl mx-auto">
-            SOYA est là pour t'écouter, te guider et t'accompagner dans ton
-            parcours. Chaque conversation est un pas vers ta reconstruction.
+            SOYA est là pour t&apos;écouter, te guider et t&apos;accompagner
+            dans ton parcours. Chaque conversation est un pas vers ta
+            reconstruction.
           </p>
           <button className="bg-gradient-to-r from-purple-500 to-indigo-500 text-white px-8 py-4 rounded-xl hover:from-purple-600 hover:to-indigo-600 transition-all font-semibold shadow-lg">
             Discuter avec SOYA

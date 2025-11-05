@@ -55,7 +55,7 @@ export default function GiftCodeGenerator() {
           </div>
           <p className="text-sm text-gray-600">
             Partage ce code avec la personne à qui tu souhaites offrir 1 mois
-            d'abonnement Pro.
+            d&apos;abonnement Pro.
           </p>
         </div>
       ) : (

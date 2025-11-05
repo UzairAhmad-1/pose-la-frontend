@@ -12,17 +12,19 @@ import {
 import Navbar from "../components/layout/Navbar";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { menCards, menGroups } from "../lib/cardData";
+import { menCards, menGroups, Card } from "../lib/cardData";
 
 export default function MenSpacePage() {
   const [selectedGroup, setSelectedGroup] = useState("Toutes les cartes");
   const [searchQuery, setSearchQuery] = useState("");
-  const [activeModal, setActiveModal] = useState(null); // 'sensitive', 'mirror', 'ghost', 'bridge'
-  const [selectedCard, setSelectedCard] = useState(null);
+  const [activeModal, setActiveModal] = useState<
+    "sensitive" | "mirror" | "ghost" | "bridge" | null
+  >(null);
+  const [selectedCard, setSelectedCard] = useState<Card | null>(null);
   const router = useRouter();
 
   // Filter cards based on selected group and search query
-  const filteredCards = menCards.filter((card) => {
+  const filteredCards = menCards.filter((card: Card) => {
     const matchesGroup =
       selectedGroup === "Toutes les cartes" || card.group === selectedGroup;
     const matchesSearch =
@@ -33,7 +35,7 @@ export default function MenSpacePage() {
   });
 
   // Handle card click with proper modal management
-  const handleCardClick = (card) => {
+  const handleCardClick = (card: Card) => {
     if (card.locked) {
       return;
     }
@@ -57,13 +59,13 @@ export default function MenSpacePage() {
   };
 
   // Handle special button clicks
-  const handleMirrorClick = (card, e) => {
+  const handleMirrorClick = (card: Card, e: React.MouseEvent) => {
     e.stopPropagation();
     setSelectedCard(card);
     setActiveModal("mirror");
   };
 
-  const handlePasserelleClick = (card, e) => {
+  const handlePasserelleClick = (card: Card, e: React.MouseEvent) => {
     e.stopPropagation();
     setSelectedCard(card);
     setActiveModal("bridge");
@@ -77,7 +79,7 @@ export default function MenSpacePage() {
     }
   };
 
-  const handleAccessGhost = (option) => {
+  const handleAccessGhost = (option: "continue" | "sensitive" | "later") => {
     setActiveModal(null);
     if (option === "continue" && selectedCard) {
       router.push(`/men-spaces/${selectedCard.id}`);
@@ -94,7 +96,7 @@ export default function MenSpacePage() {
     }
   };
 
-  const handleAccessBridge = (target) => {
+  const handleAccessBridge = (target: "crossed-language" | "mirror") => {
     setActiveModal(null);
     switch (target) {
       case "crossed-language":
@@ -159,8 +161,9 @@ export default function MenSpacePage() {
               Carte Fantôme
             </h3>
             <p className="text-sm text-gray-600 mb-4 leading-relaxed">
-              Cette carte explore des émotions intenses et des zones d'ombre.
-              Elle t'invite à revisiter ce qui hante ton cœur avec douceur.
+              Cette carte explore des émotions intenses et des zones
+              d&apos;ombre. Elle t&apos;invite à revisiter ce qui hante ton cœur
+              avec douceur.
             </p>
             <div className="space-y-2">
               <button
@@ -197,9 +200,9 @@ export default function MenSpacePage() {
               Changer de perspective
             </h3>
             <p className="text-sm text-gray-600 mb-6 leading-relaxed">
-              Vous allez découvrir comment l'autre personne pourrait vivre cette
-              situation. Ce n'est pas pour vous identifier, mais pour comprendre
-              son univers émotionnel.
+              Vous allez découvrir comment l&apos;autre personne pourrait vivre
+              cette situation. Ce n&apos;est pas pour vous identifier, mais pour
+              comprendre son univers émotionnel.
             </p>
             <div className="flex gap-3">
               <button
@@ -230,7 +233,7 @@ export default function MenSpacePage() {
               Carte Passerelle
             </h3>
             <p className="text-sm text-gray-600 mb-4 leading-relaxed">
-              Cette carte vous invite à explorer d'autres dimensions
+              Cette carte vous invite à explorer d&apos;autres dimensions
               émotionnelles.
             </p>
             <div className="space-y-2">
@@ -268,9 +271,9 @@ export default function MenSpacePage() {
           </h1>
           <p className="text-xl text-gray-700 mb-6 max-w-3xl mx-auto leading-relaxed">
             Un accompagnement pensé spécifiquement pour les hommes, explorant
-            les défis, les transitions et les forces uniques de l'expérience
-            masculine. Trouve ici un espace de fraternité et de compréhension
-            profonde.
+            les défis, les transitions et les forces uniques de
+            l&apos;expérience masculine. Trouve ici un espace de fraternité et
+            de compréhension profonde.
           </p>
           <div className="flex items-center justify-center gap-4 text-sm flex-wrap">
             <span className="bg-white text-blue-600 px-4 py-2 rounded-full font-semibold shadow-sm">
@@ -513,9 +516,9 @@ export default function MenSpacePage() {
               </h3>
               <p className="text-gray-600 leading-relaxed">
                 Chaque carte a été créée avec soin pour accompagner ton parcours
-                émotionnel. Prends ton temps, explore à ton rythme, et n'hésite
-                pas à revenir sur les cartes qui résonnent particulièrement avec
-                toi. Tu n'es pas seul dans ce voyage.
+                émotionnel. Prends ton temps, explore à ton rythme, et
+                n&apos;hésite pas à revenir sur les cartes qui résonnent
+                particulièrement avec toi. Tu n&apos;es pas seul dans ce voyage.
               </p>
             </div>
           </div>
@@ -529,11 +532,12 @@ export default function MenSpacePage() {
             <Heart className="w-8 h-8 text-blue-500 fill-blue-500" />
           </div>
           <h3 className="text-2xl font-bold text-gray-900 mb-3">
-            Besoin d'accompagnement ?
+            Besoin d&apos;accompagnement ?
           </h3>
           <p className="text-gray-700 mb-6 max-w-2xl mx-auto">
-            SOYA est là pour t'écouter, te guider et t'accompagner dans ton
-            parcours. Chaque conversation est un pas vers ta reconstruction.
+            SOYA est là pour t&apos;écouter, te guider et t&apos;accompagner
+            dans ton parcours. Chaque conversation est un pas vers ta
+            reconstruction.
           </p>
           <button className="bg-gradient-to-r from-blue-500 to-indigo-500 text-white px-8 py-4 rounded-xl hover:from-blue-600 hover:to-indigo-600 transition-all font-semibold shadow-lg">
             Discuter avec SOYA

@@ -266,7 +266,7 @@ export default function SubscriptionsPage() {
           <p>
             Questions ?{" "}
             <Link href="/help" className="text-black hover:underline">
-              Consulte notre centre d'aide
+              Consulte notre centre d&apos;aide
             </Link>
           </p>
         </div>

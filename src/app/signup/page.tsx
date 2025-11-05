@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Toast, ToastType } from "../components/ui/Toast";
 import { userApi } from "../lib/api/user.api";
 
-export default function SignupPage() {
+function SignupContent() {
   const [email, setEmail] = useState("");
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -71,7 +71,7 @@ export default function SignupPage() {
 
     if (!acceptedTerms) {
       showToast(
-        "Vous devez accepter les conditions d'utilisation pour continuer",
+        "Vous devez accepter les conditions d&apos;utilisation pour continuer",
         "error"
       );
       return;
@@ -87,14 +87,14 @@ export default function SignupPage() {
     try {
       const response = await userApi.signInWithEmail(email);
 
-      if (response.success) {
+      if (response.success && response.data?.verificationToken) {
         showToast("Lien de connexion envoyé à votre email !", "success");
 
         // Store email and verification token temporarily
         sessionStorage.setItem("pendingEmail", email);
         sessionStorage.setItem(
           "verificationToken",
-          response.data.verificationToken!
+          response.data.verificationToken
         );
 
         // Redirect to verify email page
@@ -103,7 +103,7 @@ export default function SignupPage() {
           window.location.href = `/verify-email?email=${encodedEmail}`;
         }, 1000);
       }
-    } catch (error) {
+    } catch (error: unknown) {
       showToast(
         error instanceof Error
           ? error.message
@@ -414,12 +414,12 @@ export default function SignupPage() {
                   className="mt-0.5 mr-3 rounded border-gray-300 text-black focus:ring-black"
                 />
                 <span className="text-sm text-black">
-                  J'accepte les{" "}
+                  J&apos;accepte les{" "}
                   <Link
                     href="/terms"
                     className="text-black hover:text-black underline"
                   >
-                    conditions d'utilisation
+                    conditions d&apos;utilisation
                   </Link>{" "}
                   et la{" "}
                   <Link
@@ -452,12 +452,30 @@ export default function SignupPage() {
                 href="/terms"
                 className="text-black hover:text-black transition-colors"
               >
-                Conditions d'utilisation
+                Conditions d&apos;utilisation
               </Link>
             </div>
           </div>
         </div>
       </div>
     </div>
+  );
+}
+
+export default function SignupPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="bg-[#f4f6fc] flex flex-col justify-center py-8 sm:px-6 lg:px-8 min-h-screen">
+          <div className="sm:mx-auto sm:w-full sm:max-w-md">
+            <div className="bg-white py-8 px-6 shadow sm:rounded-lg flex items-center justify-center">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-black"></div>
+            </div>
+          </div>
+        </div>
+      }
+    >
+      <SignupContent />
+    </Suspense>
   );
 }
